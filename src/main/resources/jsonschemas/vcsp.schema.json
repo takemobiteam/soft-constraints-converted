@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "file:///~/Pycharm/Projects/soft-constraints/vcsp.schema.json",
+  "title": "VCSP",
+  "description": "A valued constraint problem",
+  "type": "object",
+  "properties": {
+    "valued_constraint_problem": {
+      "description": "An object denoting a valued constraint problem.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "A unique identifier for the valued constraint problem.",
+          "type": "string"
+        },
+        "scope": {
+          "description": "Problem's variables and their corresponding domains.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Variable name.",
+                "type": "string"
+              },
+              "domain": {
+                "description": "Values that variable can be assigned.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "name",
+              "domain"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "constraints": {
+          "description": "Problem's constraints, each defined over a subset of scope.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Constraint name.",
+                "type": "string"
+              },
+              "scope": {
+                "description": "Variable that constraint assigns.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "relation": {
+                "description": "Assignments to scope and their corresponding value.",
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "name",
+              "scope",
+              "relation"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": ["name", "scope", "constraints"]
+    }
+  },
+  "required": ["valued_constraint_problem"]
+}

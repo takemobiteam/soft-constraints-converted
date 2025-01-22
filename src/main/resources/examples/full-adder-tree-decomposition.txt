@@ -1,0 +1,29 @@
+{"constraint_decomposition" :
+    {
+        "name" : "adder-hyper-tree",
+        "constraint_problem" : "full_adder",
+        "vertices" :
+            [
+                {
+                    "name" : "v1",
+                    "variables" : ["u", "v", "w", "y", "a1", "a2"],
+                    "constraints" : ["fa1", "fa2"]
+                },
+                {
+                    "name" : "v2",
+                    "variables" : ["u", "v", "w", "y", "o1"],
+                    "constraints" : ["fo1", "fe1"]
+                },
+                {
+                    "name" : "v3",
+                    "variables" : ["u", "e2"],
+                    "constraints" : ["fe2"]
+                }
+            ],
+        "edges" :
+            [
+                {"source" : "v2", "target" : "v1"},
+                {"source" : "v3", "target" : "v1"}
+            ]
+    }
+}

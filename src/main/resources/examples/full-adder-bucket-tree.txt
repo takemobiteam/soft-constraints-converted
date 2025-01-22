@@ -1,0 +1,67 @@
+{"constraint_decomposition" :
+    {
+        "name" : "adder_bucket_tree",
+        "constraint_problem" : "full_adder",
+        "vertices" :
+            [
+                {
+                    "name" : "v1",
+                    "variables" : ["u"],
+                    "constraints" : []
+                },
+                {
+                    "name" : "v2",
+                    "variables" : ["v", "u"],
+                    "constraints" : []
+                },
+                {
+                    "name" : "v3",
+                    "variables" : ["w", "v", "u"],
+                    "constraints" : []
+                },
+                {
+                    "name" : "v4",
+                    "variables" : ["y", "w", "u"],
+                    "constraints" : []
+                },
+                {
+                    "name" : "v5",
+                    "variables" : ["a1", "y", "w"],
+                    "constraints" : ["fa1"]
+                },
+                {
+                    "name" : "v6",
+                    "variables" : ["a2", "v", "u"],
+                    "constraints" : ["fa2"]
+                },
+                {
+                    "name" : "v7",
+                    "variables" : ["e1", "y", "u"],
+                    "constraints" : ["fe1"]
+                },
+                {
+                    "name" : "v8",
+                    "variables" : ["e2", "u"],
+                    "constraints" : ["fe2"]
+                },
+                {
+                    "name" : "v9",
+                    "variables" : ["o1", "w", "v"],
+                    "constraints" : ["fo1"]
+                }
+            ],
+        "edges" :
+            [
+                {"source" : "v2", "target" : "v1"},
+                {"source" : "v8", "target" : "v1"},
+                {"source" : "v6", "target" : "v2"},
+                {"source" : "v3", "target" : "v2"},
+                {"source" : "v4", "target" : "v3"},
+                {"source" : "v9", "target" : "v3"},
+                {"source" : "v5", "target" : "v4"},
+                {"source" : "v7", "target" : "v4"}
+            ]
+    }
+}
+
+

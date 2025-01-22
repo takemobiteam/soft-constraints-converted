@@ -1,0 +1,76 @@
+{
+  "schema": "https://json-schema.org/draft/2020-12/schema",
+  "id": "file:///~/Pycharm/Projects/soft-constraints/decomposition.schema.json",
+  "title": "CSP Decomposition",
+  "description": "A constraint problem decomposition",
+  "type": "object",
+  "properties": {
+    "constraint_decomposition": {
+      "description": "An object denoting a constraint problem decomposition.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "A unique identifier for the constraint problem decomposition.",
+          "type": "string"
+        },
+        "constraint_problem": {
+          "description": "Name of the constraint problem being decomposed.",
+          "type": "string"
+        },
+        "vertices": {
+          "description": "Vertices of the constraint graph, denoting a hierarchical decomposition.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Variable name.",
+                "type": "string"
+              },
+              "variables": {
+                "description": "Variables associated with this subtree.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "constraints": {
+                "description": "Constraints associated with this subtree.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              }
+            },
+            "required": ["name", "variables", "constraints"]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "edges": {
+          "description": "Edges of the constraint graph, denoting a hierarchical decomposition.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "description": "Name of the vertex that is the source of the edge.",
+                "type": "string"
+              },
+              "target": {
+                "description": "Name of the vertex that is the target of the edge.",
+                "type": "string"
+              }
+            },
+            "required": ["source","target"]
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": ["name", "constraint_problem","vertices","edges"]
+    }
+  },
+  "required": ["constraint_decomposition"]
+}
