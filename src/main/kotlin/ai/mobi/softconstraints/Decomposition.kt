@@ -12,24 +12,37 @@ class Decomposition(
     val edges: MutableList<DecompositionEdge> = mutableListOf()
 
     init {
-        // Initialize vertices
-        val vertexList = dictDecomposition.vertices
-        for (dictVertex in vertexList) {
-            val vertex = DecompositionVertex(dictVertex, this)
-            vertices.add(vertex)
-            if (vertexDict.containsKey(vertex.name)) {
-                println("Duplicate vertex name: ${vertex.name}")
-            } else {
-                vertexDict[vertex.name] = vertex
+        /*
+                # library is of type clb.ConstraintLibrary
+
+                # Creates a decomposition object corresponding to json description json_decomposition.
+                #    <constraint_decomposition> ::= “{“ “name” “:” <string_name> “,”
+                #                               “constraint_problem” “:” <string_name> “,”
+                #                               “vertices” “:” <vertices> “,”
+                #                               “edges” “:” <edges> "}"
+                #    <vertices> ::= "[" <vertex> ("," <vertex>)* "]"
+                #    <edges> ::= "[" <edge> ("," <edge>)* "]"
+         */
+        // Check and create vertices
+        val dictVertices = dictDecomposition.vertices
+        for (dictVertex1 in dictVertices) {
+            val vertex1 = DecompositionVertex(dictVertex1, this)
+            if (getVertexByName(vertex1.name) != null) {
+                println("Duplicate vertex named ${vertex1.name} in decomposition $name. Fix and reload.")
             }
+            vertexDict[vertex1.name] = vertex1
+            vertices.add(vertex1)
         }
 
-        // Initialize edges
-        val edgeList = dictDecomposition.edges
-        for (dictEdge in edgeList) {
-            val edge = DecompositionEdge(dictEdge, this)
-            edges.add(edge)
+        // Check and create edges
+        val dictEdges = dictDecomposition.edges
+        for (dictEdge1 in dictEdges) {
+            val edge1 = DecompositionEdge(dictEdge1, this)
+            edges.add(edge1)
         }
+
+        // Create the enumeration network
+        instantiateEnumerationOperators()
     }
 
     fun nextBest(vertexName: String): ValuedAssignment? {
@@ -41,13 +54,9 @@ class Decomposition(
         return vertex.nextBest()
     }
 
-    fun getVertexByName(name: String): DecompositionVertex? {
-        return vertexDict[name]
-    }
+    fun getVertexByName(name: String) = vertexDict[name]
 
-    override fun toString(): String {
-        return "Decomposition(name=$name, vertices=${vertices.size}, edges=${edges.size})"
-    }
+    override fun toString() = "d:$name"
 
     fun display() {
         println("$this:")
@@ -79,6 +88,13 @@ class Decomposition(
                 println("   Constraint $derivedConstraint, producer $derivedProducer")
             }
         }
+    }
+
+    fun instantiateEnumerationOperators() {
+        clearMarks()
+
+        /* Instantiate enumeration operators for each vertex, in topological order */
+        vertices.forEach { it.instantiateEnumerationOperators() }
     }
 
     private fun clearMarks() = vertices.forEach { it.marked = false }

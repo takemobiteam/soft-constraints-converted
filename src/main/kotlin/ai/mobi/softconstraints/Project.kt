@@ -7,12 +7,13 @@ class Project(
     vcspScope: VCSPScope
 ) : Operation {
     val name: String = "P${count++}"
-    val opVariables: List<Variable> = opVariables.sortedBy { it.getPosition() }
+    val opVariables: List<Variable> = opVariables.sortedBy { it.position }
     val inputConstraint: ValuedConstraint = opInput
     val outputConstraint: ValuedConstraint
+
+    /* # Search state for enumeration. */
     private var index: Int = 0
     private var enumerationFinished: Boolean = false
-    private val queue: MutableList<Any> = mutableListOf()
 
     init {
         // Check that opVariables is a subset of the input constraint's scope

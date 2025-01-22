@@ -17,8 +17,4 @@ class Variable(
     fun after(var2: Variable): Boolean {
         return this.position < var2.position
     }
-
-    fun getPosition(): Int {
-        return position
-    }
 }

@@ -55,9 +55,9 @@ class DecompositionVertex(
     }
 
     fun display() {
-        println("Vertex: $name")
-        println("Variables: ${listToString(variables)}")
-        println("Constraints: ${listToString(constraints)}")
+        println("$this:")
+        println("    Variables: ${listToString(variables)}")
+        println("    Constraints: ${listToString(constraints)}")
     }
 
     fun instantiateEnumerationOperators() {
