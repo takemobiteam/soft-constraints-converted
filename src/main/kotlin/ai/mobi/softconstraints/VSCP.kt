@@ -2,6 +2,13 @@ package ai.mobi.softconstraints
 
 import ai.mobi.softconstraints.serde.SerializedConstraintProblem
 
+/**
+ *         # Creates a VCSP object corresponding to json description json_vcsp.
+ *         #    <VCSP> ::= “{“ “name” “:” <string_name> “,”
+ *         #                   “scope” “:” <variables> ","
+ *         #                   “constraints” “:” <constraints> "}"
+ *         #    <constraints> ::= “{“ <constraint> ("," <constraint>)*  “}”
+ */
 class VCSP(dictVCSP: SerializedConstraintProblem) {
     val name = dictVCSP.name
     val scope: VCSPScope = VCSPScope(dictVCSP.scope)
@@ -11,7 +18,7 @@ class VCSP(dictVCSP: SerializedConstraintProblem) {
     init {
         val constraintList = dictVCSP.constraints
         for (dictValuedConstraint in constraintList) {
-            val vConstraint = ValuedConstraint(dictValuedConstraint, scope)
+            val vConstraint = ValuedConstraint(dictValuedConstraint.toConstraintDictionary(scope), scope)
             constraints.add(vConstraint)
 
             // Check for duplicate constraint names

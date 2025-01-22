@@ -1,17 +1,19 @@
 package ai.mobi.softconstraints
 
+import ai.mobi.softconstraints.serde.SerializedDecomposition
+
 class Decomposition(
-    dictDecomposition: Map<String, Any>,
+    dictDecomposition: SerializedDecomposition,
     val vcsp: VCSP
 ) {
-    val name: String = dictDecomposition["name"] as String
+    val name: String = dictDecomposition.name
     val vertices: MutableList<DecompositionVertex> = mutableListOf()
     private val vertexDict: MutableMap<String, DecompositionVertex> = mutableMapOf()
     val edges: MutableList<DecompositionEdge> = mutableListOf()
 
     init {
         // Initialize vertices
-        val vertexList = dictDecomposition["vertices"] as List<Map<String, Any>>
+        val vertexList = dictDecomposition.vertices
         for (dictVertex in vertexList) {
             val vertex = DecompositionVertex(dictVertex, this)
             vertices.add(vertex)
@@ -23,7 +25,7 @@ class Decomposition(
         }
 
         // Initialize edges
-        val edgeList = dictDecomposition["edges"] as List<Map<String, String>>
+        val edgeList = dictDecomposition.edges
         for (dictEdge in edgeList) {
             val edge = DecompositionEdge(dictEdge, this)
             edges.add(edge)
@@ -49,7 +51,7 @@ class Decomposition(
 
     fun display() {
         println("$this:")
-        println("   Decomposes ${vcsp}")
+        println("   Decomposes $vcsp")
         println("   Edges: ${Utils.listToString(edges)}")
         println("   Vertices:")
         for (vertex in vertices) {
@@ -78,4 +80,6 @@ class Decomposition(
             }
         }
     }
+
+    private fun clearMarks() = vertices.forEach { it.marked = false }
 }

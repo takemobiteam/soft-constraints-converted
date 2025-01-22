@@ -1,5 +1,8 @@
 package ai.mobi.softconstraints
 
+import ai.mobi.softconstraints.Utils.listToString
+import ai.mobi.softconstraints.serde.SerializedVertex
+
 /**
  *  Creates a decomposition vertex object corresponding to json description dict_decomposition_vertex.
  *     <vertex> ::= "{" “name” : <string_name> “,”
@@ -9,25 +12,25 @@ package ai.mobi.softconstraints
  *     <string_names> ::= "[]" | "[" <string_name> ("," <string_name>)* "]"
  */
 class DecompositionVertex(
-    dictDecompositionVertex: Map<String, Any>,
+    dictDecompositionVertex: SerializedVertex,
     private val decomp: Decomposition
 ) {
     var marked: Boolean = false
-    val name: String = dictDecompositionVertex["name"] as String
+    val name: String = dictDecompositionVertex.name
     val variables: MutableList<Variable> = mutableListOf()
     val constraints: MutableList<ValuedConstraint> = mutableListOf()
     val inputVertices: MutableList<DecompositionVertex> = mutableListOf()
     var outputConstraint: ValuedConstraint? = null
     val operations: MutableList<Any> = mutableListOf()
-    val derivedConstraints: MutableList<Any> = mutableListOf()
+    val derivedConstraints: MutableList<ValuedConstraint> = mutableListOf()
 
     init {
         val vcsp = decomp.vcsp
 
         // Resolve variables
-        val variableNames = dictDecompositionVertex["variables"] as List<String>
+        val variableNames = dictDecompositionVertex.variables
         for (variableName in variableNames) {
-            val variable = vcsp.getVariableByName(variableName)
+            val variable = vcsp.variableNamed(variableName)
             if (variable == null) {
                 println("Undefined variable $variableName used in vertex $name of decomposition ${decomp.name}. Fix and reload.")
             } else {
@@ -36,7 +39,7 @@ class DecompositionVertex(
         }
 
         // Resolve constraints
-        val constraintNames = dictDecompositionVertex["constraints"] as List<String>
+        val constraintNames = dictDecompositionVertex.constraints
         for (constraintName in constraintNames) {
             val constraint = vcsp.getConstraintByName(constraintName)
             if (constraint == null) {
@@ -53,8 +56,8 @@ class DecompositionVertex(
 
     fun display() {
         println("Vertex: $name")
-        println("Variables: ${Utils.listToString(variables)}")
-        println("Constraints: ${Utils.listToString(constraints)}")
+        println("Variables: ${listToString(variables)}")
+        println("Constraints: ${listToString(constraints)}")
     }
 
     fun instantiateEnumerationOperators() {
@@ -65,7 +68,7 @@ class DecompositionVertex(
             val inputConstraints = mutableListOf<ValuedConstraint>()
             for (inputVertex in inputVertices) {
                 inputVertex.instantiateEnumerationOperators()
-                inputConstraints.add(inputVertex.outputConstraint)
+                inputConstraints.add(inputVertex.outputConstraint!!)
             }
 
             operations.clear()
@@ -100,5 +103,18 @@ class DecompositionVertex(
     fun nextBest(): ValuedAssignment? {
         // Delegate to the output constraint's nextBest method
         return outputConstraint?.nextBest()
+    }
+
+    fun displayEnumerationOperators() {
+        if (!marked) {
+            marked = true
+            println("Vertex $this:")
+            println("  Inputs: ${listToString(inputVertices)}")
+            println("  Operations: ${listToString(operations)}")
+
+            inputVertices.forEach { decompositionVertex ->
+                decompositionVertex.displayEnumerationOperators()
+            }
+        }
     }
 }

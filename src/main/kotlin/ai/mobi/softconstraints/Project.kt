@@ -22,11 +22,7 @@ class Project(
         }
 
         // Create the output constraint
-        val constraintDict = mapOf(
-            "name" to name,
-            "scope" to opVariables,
-            "relation" to listOf<Any>()
-        )
+        val constraintDict = ConstraintDictionary(name, opVariables, listOf())
         outputConstraint = ValuedConstraint(constraintDict, vcspScope, this)
         outputConstraint.producer = this
     }
@@ -35,7 +31,7 @@ class Project(
         return "$name${Utils.listToString(opVariables)}(${inputConstraint.name})"
     }
 
-    fun nextBest(): ValuedAssignment? {
+    override fun nextBest(): ValuedAssignment? {
         while (!enumerationFinished) {
             // Generate the ith-best assignment of the input constraint
             val vasgn1 = inputConstraint.ithBest(index)

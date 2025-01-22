@@ -1,9 +1,9 @@
 package ai.mobi.softconstraints
 
+import ai.mobi.softconstraints.serde.SerializedConstraintDecomposition
 import ai.mobi.softconstraints.serde.SerializedValuedConstraintProblem
 import kotlinx.serialization.json.Json
 import java.io.File
-import java.nio.file.Paths
 
 class ConstraintLibrary(
     constraintDirectory: String = "",
@@ -13,7 +13,7 @@ class ConstraintLibrary(
 ) {
     private val constraintDirectory: File
     private val schemaDirectory: File
-    private val vcspLibrary = mutableMapOf<String, Any>()
+    private val vcspLibrary = mutableMapOf<String, VCSP>()
     private val decompositionLibrary = mutableMapOf<String, Any>()
 
     init {
@@ -33,6 +33,8 @@ class ConstraintLibrary(
 
     fun readVCSP(vcspRelativePath: String): VCSP {
         val filePath = constraintDirectory.resolve(vcspRelativePath)
+        if (!filePath.exists()) throw FileMissingException(filePath, constraintDirectory)
+
         val jsonContent = filePath.readText()
         val wrappedDictVCSP = Json.decodeFromString<SerializedValuedConstraintProblem>(jsonContent)
 
@@ -48,35 +50,26 @@ class ConstraintLibrary(
 
     fun readDecomposition(relativePath: String): Decomposition {
         val filePath = constraintDirectory.resolve(relativePath)
-
         if (!filePath.exists()) throw FileMissingException(filePath, constraintDirectory)
 
-        val jsonContent = filePath.toFile().readText()
-        val wrappedDictDecomposition = JSONObject(jsonContent)
-        val dictDecomposition = wrappedDictDecomposition.getJSONObject("constraint_decomposition")
+        val jsonContent = filePath.readText()
+        val wrappedDictDecomposition = Json.decodeFromString<SerializedConstraintDecomposition>(jsonContent)
 
-        if (!decompositionValidator.isValid(wrappedDictDecomposition)) {
-            println("File $filePath is not a valid JSON CSP decomposition description.")
-            val validityMessages = decompositionValidator.iterErrors(wrappedDictDecomposition)
-            println("     Error messages:")
-            validityMessages.forEach { println("          $it") }
-            return null
-        }
+        val dictDecomposition = wrappedDictDecomposition.constraint_decomposition
 
-        val vcspName = dictDecomposition.getString("constraint_problem")
+        val vcspName = dictDecomposition.constraint_problem
         val vcsp = getVCSP(vcspName)
-        if (vcsp == null) {
-            println("Can't define decomposition specified by $filePath, its VCSP $vcspName isn't in the library.")
-            return null
-        }
 
-        val decomposition = Decomposition(dictDecomposition.toMap(), vcsp)
+        val decomposition = Decomposition(dictDecomposition, vcsp)
         decompositionLibrary[decomposition.name] = decomposition
         if (trace) {
             println("Adding valued CSP decomposition ${decomposition.name} to library as $decomposition.")
         }
         return decomposition
     }
+
+    private fun getVCSP(vcspName: String): VCSP = vcspLibrary[vcspName]!!
+
 }
 
 class FileMissingException(val filaPath: File, val constraintDirectory: File):

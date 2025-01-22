@@ -8,6 +8,12 @@ data class ConstraintDictionary(
     val relation: List<List<String>>
 )
 
+fun SerializedConstraint.toConstraintDictionary(vcspScope: VCSPScope) = ConstraintDictionary(
+    name,
+    scope.map { vcspScope.varDict[it]!! },
+    relation
+)
+
 class ValuedConstraint(
     dictValuedConstraint: ConstraintDictionary,
     vcspScope: VCSPScope,

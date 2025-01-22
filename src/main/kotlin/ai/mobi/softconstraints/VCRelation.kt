@@ -9,7 +9,7 @@ class VCRelation(
     init {
         if (dictRelation.isNotEmpty()) {
             for (dictVasn in dictRelation) {
-                val vasn = ValuedAssignment(scope, dictVasn)
+                val vasn = ValuedAssignment(scope, ValuedAssignmentDictionary(dictVasn))
                 scope.checkValuedAssignment(vasn)
                 assignments.add(vasn)
             }

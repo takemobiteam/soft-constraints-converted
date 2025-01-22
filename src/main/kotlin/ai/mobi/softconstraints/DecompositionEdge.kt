@@ -1,18 +1,20 @@
 package ai.mobi.softconstraints
 
+import ai.mobi.softconstraints.serde.SerializedEdge
+
 class DecompositionEdge(
-    dictDecompositionEdge: Map<String, String>,
+    dictDecompositionEdge: SerializedEdge,
     private val decomp: Decomposition
 ) {
     val source: DecompositionVertex
     val target: DecompositionVertex
 
     init {
-        val sourceName = dictDecompositionEdge["source"] ?: throw IllegalArgumentException("Source not specified.")
+        val sourceName = dictDecompositionEdge.source
         source = decomp.getVertexByName(sourceName)
             ?: throw IllegalStateException("Edge uses undefined vertex $sourceName in decomposition ${decomp.name}. Fix and reload.")
 
-        val targetName = dictDecompositionEdge["target"] ?: throw IllegalArgumentException("Target not specified.")
+        val targetName = dictDecompositionEdge.target
         target = decomp.getVertexByName(targetName)
             ?: throw IllegalStateException("Edge uses undefined vertex $targetName in decomposition ${decomp.name}. Fix and reload.")
 

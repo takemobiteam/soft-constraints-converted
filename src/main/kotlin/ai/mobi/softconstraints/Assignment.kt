@@ -1,29 +1,16 @@
 package ai.mobi.softconstraints
 
+data class ValuedAssignmentDictionary(val assignments: List<String>, val value: Float) {
+    constructor(assignmentsAndValue: List<String>):
+            this(assignmentsAndValue.dropLast(1), assignmentsAndValue.last().toFloat())
+}
+
 class ValuedAssignment(
     private val scope: VCScope,
-    dictVAssignment: MutableList<Float>
+    dictVAssignment: ValuedAssignmentDictionary
 ) {
-    val assignment: List<Float>
-    private val value: Float
-
-    init {
-        if (dictVAssignment.isEmpty()) {
-            throw IllegalArgumentException("Valued assignment cannot be empty.")
-        }
-        // Extract the value from the end of the list
-        val dictValue = dictVAssignment.removeLast()
-        assignment = dictVAssignment.toList()
-
-        // Validate the value
-        value = try {
-            dictValue.toString().toFloat()
-        } catch (_: NumberFormatException) {
-            throw IllegalArgumentException(
-                "Value $dictValue in valued assignment $this is not a valid number."
-            )
-        }
-    }
+    val assignment = dictVAssignment.assignments
+    private val value = dictVAssignment.value
 
     override fun toString(): String {
         return "${Utils.listToString(assignment)}:$value"
@@ -38,7 +25,7 @@ class ValuedAssignment(
         val inputAssignment = assignment
         val outputVars = outputScope.orderedVars
 
-        val outputAssignment = mutableListOf<Float>()
+        val outputAssignment = mutableListOf<String>()
         var inputIndex = 0
 
         for (outputVar in outputVars) {
@@ -54,7 +41,7 @@ class ValuedAssignment(
             outputAssignment.add(inputAssignment[inputIndex])
         }
 
-        return ValuedAssignment(outputScope, outputAssignment.apply { add(value) })
+        return ValuedAssignment(outputScope, ValuedAssignmentDictionary(outputAssignment, value))
     }
 
     /**
@@ -79,7 +66,7 @@ class ValuedAssignment(
 
         /* assignment being created */
         val outputVars = outputScope.orderedVars
-        val outputAssignment = mutableListOf<Float>()
+        val outputAssignment = mutableListOf<String>()
 
         var input1Index = 0
         var input2Index = 0
@@ -109,8 +96,7 @@ class ValuedAssignment(
 
         // Compose the value for the combined assignment
         val composedValue = this.getValue() + vasgn2.getValue()
-        outputAssignment.add(composedValue)
 
-        return ValuedAssignment(outputScope, outputAssignment)
+        return ValuedAssignment(outputScope, ValuedAssignmentDictionary(outputAssignment, composedValue))
     }
 }
