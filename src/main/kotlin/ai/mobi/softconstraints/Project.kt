@@ -39,12 +39,16 @@ class Project(
             val vasgn1 = inputConstraint.ithBest(index)
             if (vasgn1 != null) {
                 // Project the assignment
-                val projectedAssignment = vasgn1.project(outputConstraint.scope)
+                val projectedAssignment = vasgn1.project(outputConstraint.scope)!!
                 index++
-                if (projectedAssignment != null) {
-                    return projectedAssignment
+                if (outputConstraint.containsAssignment(projectedAssignment)) {
+                    /* Projection is already known, go to next */
+                    continue
                 }
+                /* Projection is new, return as next best */
+                return projectedAssignment
             } else {
+                /* Flag no remaining assignments */
                 enumerationFinished = true
             }
         }

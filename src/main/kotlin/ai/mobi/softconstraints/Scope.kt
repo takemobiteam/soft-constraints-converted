@@ -52,7 +52,7 @@ class VCScope(
 class DuplicateVariableName(val varName: String, val vars: List<Variable>):
     Exception("Variable $varName is duplicated in constraint scope $vars")
 
-tailrec fun assertVarsInOrder(vs: List<Variable>): Unit {
+tailrec fun assertVarsInOrder(vs: List<Variable>) {
     if (vs.size > 1)
         if (vs[0].position >= vs[1].position)
             throw Exception("Variables out of order in $vs")
