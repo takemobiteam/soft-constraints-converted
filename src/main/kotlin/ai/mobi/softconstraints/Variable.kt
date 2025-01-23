@@ -1,20 +1,15 @@
 package ai.mobi.softconstraints
 
+typealias VariableName = String
+
 class Variable(
-    val name: String,
-    val domain: List<String>,
+    val name: VariableName,
+    val domain: List<VariableName>,
     val position: Int
 ) {
-
-    override fun toString(): String {
-        return name
-    }
+    override fun toString() = name
 
     fun display() {
-        println("$name: ${Utils.listToString(domain)}")
-    }
-
-    fun after(var2: Variable): Boolean {
-        return this.position < var2.position
+        println("$name: ${listToString(domain)}")
     }
 }

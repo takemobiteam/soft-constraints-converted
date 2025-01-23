@@ -2,7 +2,6 @@ package ai.mobi.softconstraints
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
 class Test {
     val vars = listOf("a1", "a2", "e1", "e2", "o1", "u", "v", "w", "y")
@@ -10,8 +9,7 @@ class Test {
 
     @Test
     fun `Read VSCP`() {
-        val library = ConstraintLibrary()
-        val vscp = library.readVCSP("full-adder-constraints")
+        val vscp = readVCSP("full-adder-constraints")
         assertEquals("full_adder", vscp.name)
         assertEquals(vars, vscp.scope.orderedVars.map { it.name })
         assertEquals(vars.toSet(), vscp.scope.varDict.keys)
@@ -21,9 +19,8 @@ class Test {
 
     @Test
     fun `Read decomposition`() {
-        val library = ConstraintLibrary()
-        library.readVCSP("full-adder-constraints")
-        val decomp = library.readDecomposition("full-adder-bucket-tree")
+        val vcsp = readVCSP("full-adder-constraints")
+        val decomp = readDecomposition("full-adder-bucket-tree", vcsp)
         assertEquals("adder_bucket_tree", decomp.name)
         assertEquals(9, decomp.vertices.size)
         assertEquals(8, decomp.edges.size)
@@ -31,9 +28,8 @@ class Test {
 
     @Test
     fun `Next best bucket tree`() {
-        val library = ConstraintLibrary()
-        library.readVCSP("full-adder-constraints")
-        val decomp = library.readDecomposition("full-adder-bucket-tree")
+        val vcsp = readVCSP("full-adder-constraints")
+        val decomp = readDecomposition("full-adder-bucket-tree", vcsp)
         assertNextBest("v4",
             listOf(
                 listOf("1", "0", "0"),
@@ -58,9 +54,8 @@ class Test {
 
     @Test
     fun `Next best decomposition`() {
-        val library = ConstraintLibrary()
-        library.readVCSP("full-adder-constraints")
-        val decomp = library.readDecomposition("full-adder-tree-decomposition")
+        val vcsp = readVCSP("full-adder-constraints")
+        val decomp = readDecomposition("full-adder-tree-decomposition", vcsp)
         assertNextBest("v3",
             listOf(
                 listOf("G", "0"),

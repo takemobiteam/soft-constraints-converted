@@ -46,7 +46,7 @@ class ValuedConstraint(
 
     fun display() {
         println("$this:")
-        println("   Scope: ${Utils.listToString(scope.orderedVars)}")
+        println("   Scope: ${listToString(scope.orderedVars)}")
         println("   Relation:")
         for (assignment in relation.assignments) {
             println("      $assignment")

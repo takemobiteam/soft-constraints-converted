@@ -21,7 +21,7 @@ class ValuedAssignment(
     private val value = dictVAssignment.value
 
     override fun toString(): String {
-        return "${Utils.listToString(assignment)}:$value"
+        return "${listToString(assignment)}:$value"
     }
 
     fun getValue(): Float {

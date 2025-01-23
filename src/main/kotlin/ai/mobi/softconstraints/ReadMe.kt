@@ -30,7 +30,6 @@ fun main() {
         It loads VCSPs and their decompositions from an example directory.
         
     """.trimIndent())
-    val library = ConstraintLibrary()
 
     println("""
         
@@ -39,7 +38,7 @@ fun main() {
         [Sachenbacher Williams Paper](https://mers-papers.csail.mit.edu/Publications/2004/Sachenbacher-Williams_SOFT04/Sachenbacher-Williams_SOFT04_distribution.pdf)
         
     """.trimIndent())
-    val vcsp = library.readVCSP("full-adder-constraints")
+    val vcsp = readVCSP("full-adder-constraints")
     vcsp.display()
 
     println("""
@@ -48,7 +47,7 @@ fun main() {
         This is an AND/OR decomposition.
         
     """.trimIndent())
-    val decomp = library.readDecomposition("full-adder-bucket-tree")
+    val decomp = readDecomposition("full-adder-bucket-tree", vcsp)
     decomp.display()
 
     println("""
@@ -78,7 +77,7 @@ fun main() {
         5) Load and display a bucket tree decomposition for the full-adder
         
     """.trimIndent())
-    val decomp1 = library.readDecomposition("full-adder-tree-decomposition")
+    val decomp1 = readDecomposition("full-adder-tree-decomposition", vcsp)
     decomp1.display()
 
     // 6) Generate a network of combine/join operations for the bucket tree decomposition

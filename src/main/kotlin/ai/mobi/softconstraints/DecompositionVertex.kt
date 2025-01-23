@@ -1,6 +1,5 @@
 package ai.mobi.softconstraints
 
-import ai.mobi.softconstraints.Utils.listToString
 import ai.mobi.softconstraints.serde.SerializedVertex
 
 /**

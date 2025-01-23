@@ -3,11 +3,11 @@ package ai.mobi.softconstraints
 import ai.mobi.softconstraints.serde.SerializedConstraintProblem
 
 /**
- *         # Creates a VCSP object corresponding to json description json_vcsp.
- *         #    <VCSP> ::= “{“ “name” “:” <string_name> “,”
- *         #                   “scope” “:” <variables> ","
- *         #                   “constraints” “:” <constraints> "}"
- *         #    <constraints> ::= “{“ <constraint> ("," <constraint>)*  “}”
+ *  Creates a VCSP object corresponding to json description json_vcsp.
+ *     <VCSP> ::= “{“ “name” “:” <string_name> “,”
+ *                    “scope” “:” <variables> ","
+ *                    “constraints” “:” <constraints> "}"
+ *     <constraints> ::= “{“ <constraint> ("," <constraint>)*  “}”
  */
 class VCSP(dictVCSP: SerializedConstraintProblem) {
     val name = dictVCSP.name

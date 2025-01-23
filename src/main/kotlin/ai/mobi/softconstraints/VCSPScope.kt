@@ -4,29 +4,33 @@ import ai.mobi.softconstraints.serde.SerializedVariable
 
 /**
  * A list of [Variable]s, sorted by their specified order
+ *
+ * @param dictScope a list of variables, which must be in order
  */
 class VCSPScope(dictScope: List<SerializedVariable>) {
-    val orderedVars: MutableList<Variable> = mutableListOf()
-    val varDict: MutableMap<String, Variable> = mutableMapOf()
+    val orderedVars: List<Variable>
+    val varDict: Map<String, Variable>
 
     init {
-        var position = 0 // Position of each variable in the ordering
-        for (dictVar in dictScope) {
+        val orderedVarsTemp = mutableListOf<Variable>()
+        val valDictTemp = mutableMapOf<String, Variable>()
+        for ((position, dictVar) in dictScope.withIndex()) {
             val varName = dictVar.name
-            if (varDict.containsKey(varName)) {
-                println("Dropping duplicate variable $dictVar in VCSP scope $dictScope.")
+            if (valDictTemp.containsKey(varName)) {
+                throw DuplicateVariableInScope(dictVar, dictScope)
             } else {
                 val varDomain = dictVar.domain
                 val variable = Variable(varName, varDomain, position)
-                orderedVars.add(variable)
-                varDict[varName] = variable
+                orderedVarsTemp.add(variable)
+                valDictTemp[varName] = variable
             }
-            position++
         }
+        orderedVars = orderedVarsTemp.toList()
+        varDict = valDictTemp.toMap()
     }
 
     override fun toString(): String {
-        return Utils.listToString(orderedVars)
+        return listToString(orderedVars)
     }
 
     fun display() {
@@ -35,3 +39,6 @@ class VCSPScope(dictScope: List<SerializedVariable>) {
         }
     }
 }
+
+class DuplicateVariableInScope(dictVar: SerializedVariable, dictScope: List<SerializedVariable>):
+    Exception("Duplicate variable $dictVar in VCSP scope $dictScope")

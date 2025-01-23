@@ -79,7 +79,7 @@ class Decomposition(
     fun display() {
         println("$this:")
         println("   Decomposes $vcsp")
-        println("   Edges: ${Utils.listToString(edges)}")
+        println("   Edges: ${listToString(edges)}")
         println("   Vertices:")
         for (vertex in vertices) {
             vertex.display()

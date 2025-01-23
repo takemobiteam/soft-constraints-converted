@@ -20,7 +20,7 @@ class Project(
         assertVarsInOrder(this.opVariables)
         val isSubset = opVariables.all { it in opInput.scope.orderedVars }
         if (!isSubset) {
-            println("Projecting to ${Utils.listToString(opVariables)}, some of which are not in constraint scope ${Utils.listToString(opInput.scope.orderedVars)}.")
+            println("Projecting to ${listToString(opVariables)}, some of which are not in constraint scope ${listToString(opInput.scope.orderedVars)}.")
         }
 
         // Create the output constraint
@@ -30,7 +30,7 @@ class Project(
     }
 
     override fun toString(): String {
-        return "$name${Utils.listToString(opVariables)}(${inputConstraint.name})"
+        return "$name${listToString(opVariables)}(${inputConstraint.name})"
     }
 
     override fun nextBest(): ValuedAssignment? {

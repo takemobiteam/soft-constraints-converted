@@ -29,7 +29,7 @@ class VCScope(
     }
 
     override fun toString(): String {
-        return Utils.listToString(orderedVars)
+        return listToString(orderedVars)
     }
 
     fun checkValuedAssignment(vasgn1: ValuedAssignment): Boolean {
