@@ -2,6 +2,9 @@ package ai.mobi.softconstraints
 
 import ai.mobi.softconstraints.serde.SerializedVariable
 
+/**
+ * A list of [Variable]s, sorted by their specified order
+ */
 class VCSPScope(dictScope: List<SerializedVariable>) {
     val orderedVars: MutableList<Variable> = mutableListOf()
     val varDict: MutableMap<String, Variable> = mutableMapOf()

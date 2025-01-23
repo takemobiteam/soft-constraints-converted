@@ -25,7 +25,7 @@ class Combine(
         val combinedVariables = extractJointVariables(input1Constraint.scope, input2Constraint.scope)
 
         /* Create constraint denoting the result of operator and record operator as its producer */
-        val constraintDict = ConstraintDictionary(
+        val constraintDict = ConstraintParameters(
             name,
             combinedVariables,
             emptyList(),
@@ -33,7 +33,7 @@ class Combine(
         outputConstraint = ValuedConstraint(constraintDict, vcspScope)
         outputConstraint.producer = this
 
-        // Initialize the queue
+        /* Search state for enumeration */
         queue.add(Triple(-1, 1, 1))
     }
 
@@ -85,6 +85,10 @@ class Combine(
     companion object {
         private var count: Int = 1
 
+        /**
+         * Return ordered list of combined_variables from scopes 1 and 2.  The result is a list of variables from both,
+         * but in the proper order
+         */
         fun extractJointVariables(scope1: VCScope, scope2: VCScope): List<Variable> {
             val composedVariables = mutableListOf<Variable>()
             val s1Vars = scope1.orderedVars

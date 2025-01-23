@@ -24,32 +24,47 @@ fun printBest(decomposition: Decomposition, vertexName: String) {
 fun main() {
     println("This file demonstrates constraint library interactions on the full adder example.\n")
 
-    /*
+    println("""
+        
         1) Create the Constraint Library, which is the main interface for solving valued CSPS.
         It loads VCSPs and their decompositions from an example directory.
-     */
+        
+    """.trimIndent())
     val library = ConstraintLibrary()
 
-    /* 2) Load and display an example VCSP, the full-adder from the Sachenbacher Williams Paper */
-    println("\nLoad and display a full-adder VCSP from the Sachenbacher/Williams paper\n")
-    val vcsp = library.readVCSP()
-    println()
+    println("""
+        
+        2) Load and display an example VCSP (\"Semiring-based Constraint OptimizationProblem\"), 
+        the full-adder from the 
+        [Sachenbacher Williams Paper](https://mers-papers.csail.mit.edu/Publications/2004/Sachenbacher-Williams_SOFT04/Sachenbacher-Williams_SOFT04_distribution.pdf)
+        
+    """.trimIndent())
+    val vcsp = library.readVCSP("full-adder-constraints")
     vcsp.display()
 
-    /* 3) Load and display a hyper tree decomposition for the full-adder.  This is an AND/OR decomposition. */
-    println("\nLoad and display a hyper tree decomposition for the full-adder.\n")
-    val decomp = library.readDecomposition("full-adder-bucket-tree.json")
-    println()
+    println("""
+        
+        3) Load and display a hyper tree (bucket tree) decomposition for the full-adder.
+        This is an AND/OR decomposition.
+        
+    """.trimIndent())
+    val decomp = library.readDecomposition("full-adder-bucket-tree")
     decomp.display()
 
-    // 4) Generate a network of combine/join operations for the hyper tree decomposition
-    println("\nGenerate a network of combine/join operations for the hyper tree decomposition.\n")
-
+    println("""
+        
+        4a) Generate a network of combine/join operations for the hyper tree decomposition
+        
+    """.trimIndent())
     decomp.displayEnumerationOperators()
     decomp.displayConstraintProducers()
 
-    // 4) Examples of enumeration for the hyper tree decomposition
-    println("\nGenerate the best assignment for vertex 4.")
+    println("""
+        
+        4b) Examples of enumeration for the hyper tree decomposition
+        Generate the best assignment for vertex 4
+        
+    """.trimIndent())
     printNextBest(decomp, "v4")
 
     println("\nFull assignments for V4 - V1")
@@ -58,13 +73,13 @@ fun main() {
     printBest(decomp, "v2")
     printBest(decomp, "v1")
 
-    // 5) Load and display a bucket tree decomposition for the full-adder
-    println("\nLoad and display a bucket tree decomposition for the full-adder.")
-    val decomp1 = library.readDecomposition("full-adder-tree-decomposition.json")
-
-    println()
+    println("""
+        
+        5) Load and display a bucket tree decomposition for the full-adder
+        
+    """.trimIndent())
+    val decomp1 = library.readDecomposition("full-adder-tree-decomposition")
     decomp1.display()
-    println()
 
     // 6) Generate a network of combine/join operations for the bucket tree decomposition
     println("Generate a network of combine/join operations for the bucket tree decomposition.")

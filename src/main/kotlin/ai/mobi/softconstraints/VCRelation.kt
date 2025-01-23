@@ -1,5 +1,10 @@
 package ai.mobi.softconstraints
 
+/**
+ *  Creates a relation object corresponding to dictionary description dict_relation.
+ *     dict_relation ::= <ordered_assignments> ::= "[]" or “[“ <ordered_assignment> ("," <ordered_assignment>)*  “]”
+ *     <ordered_assignment> ::= “[“ <string_value> ("," <string_value>)*  “]”
+ */
 class VCRelation(
     dictRelation: List<List<String>>,
     private val scope: VCScope
@@ -9,7 +14,7 @@ class VCRelation(
     init {
         if (dictRelation.isNotEmpty()) {
             for (dictVasn in dictRelation) {
-                val vasn = ValuedAssignment(scope, ValuedAssignmentDictionary(dictVasn))
+                val vasn = ValuedAssignment(scope, AssignmentParameters(dictVasn))
                 scope.checkValuedAssignment(vasn)
                 assignments.add(vasn)
             }

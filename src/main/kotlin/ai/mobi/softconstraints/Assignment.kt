@@ -1,13 +1,21 @@
 package ai.mobi.softconstraints
 
-data class ValuedAssignmentDictionary(val assignments: List<String>, val value: Float) {
+/**
+ * Parameters to an assignment.  This includes a list variable assignments, and a value.
+ */
+data class AssignmentParameters(val assignments: List<String>, val value: Float) {
+
+    /**
+     * Create an assignment from the input format.  This is a list of strings, where the last element in the list is
+     * the value.
+     */
     constructor(assignmentsAndValue: List<String>):
             this(assignmentsAndValue.dropLast(1), assignmentsAndValue.last().toFloat())
 }
 
 class ValuedAssignment(
     private val scope: VCScope,
-    dictVAssignment: ValuedAssignmentDictionary
+    dictVAssignment: AssignmentParameters
 ) {
     val assignment = dictVAssignment.assignments
     private val value = dictVAssignment.value
@@ -20,7 +28,7 @@ class ValuedAssignment(
         return value
     }
 
-    fun project(outputScope: VCScope): ValuedAssignment? {
+    fun project(outputScope: VCScope): ValuedAssignment {
         val inputVars = scope.orderedVars
         val inputAssignment = assignment
         val outputVars = outputScope.orderedVars
@@ -41,7 +49,7 @@ class ValuedAssignment(
             outputAssignment.add(inputAssignment[inputIndex])
         }
 
-        return ValuedAssignment(outputScope, ValuedAssignmentDictionary(outputAssignment, value))
+        return ValuedAssignment(outputScope, AssignmentParameters(outputAssignment, value))
     }
 
     /**
@@ -97,6 +105,6 @@ class ValuedAssignment(
         // Compose the value for the combined assignment
         val composedValue = this.getValue() + vasgn2.getValue()
 
-        return ValuedAssignment(outputScope, ValuedAssignmentDictionary(outputAssignment, composedValue))
+        return ValuedAssignment(outputScope, AssignmentParameters(outputAssignment, composedValue))
     }
 }

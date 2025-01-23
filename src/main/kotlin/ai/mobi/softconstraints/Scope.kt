@@ -1,9 +1,12 @@
 package ai.mobi.softconstraints
 
+/**
+ * An list of variables, sorted by their defined orders
+ */
 class VCScope(
     vars: List<Variable>,
-    private val constraint: ValuedConstraint,
-    vcspScope: VCSPScope
+    private val constraint: ValuedConstraint,   // Will this be needed?
+    vcspScope: VCSPScope,                       // Will this be needed?
 ) {
     val orderedVars: MutableList<Variable> = mutableListOf()
     private val varsDict: MutableMap<String, Variable> = mutableMapOf()

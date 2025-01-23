@@ -2,6 +2,36 @@ package ai.mobi.softconstraints
 
 import ai.mobi.softconstraints.serde.SerializedDecomposition
 
+/**
+    Constraint Decomposition Format:
+
+       <constraint_decomposition> ::= “{“ “name” “:” <string_name> “,”
+                                  “constraint_problem” “:” <string_name> “,”
+                                  “vertices” “:” <vertices> “,”
+                                  “edges” “:” <edges> "}"
+
+       <vertices> ::= "[" <vertex> ("," <vertex>)* "]"
+       <edges> ::= "[" <edge> ("," <edge>)* "]"
+
+       <vertex> ::= "{" “name” : <string_name> “,”
+                        “variables” : <string_names> ","
+                        “constraints” : <string_names> "}"
+
+       <string_names> ::= "[]" | "[" <string_name> ("," <string_name>)* "]"
+
+       <edge> ::= "{" "source" : <string_name>
+                      "target" : <string_name> "}"
+
+    library is of type clb.ConstraintLibrary
+
+    Creates a decomposition object corresponding to json description json_decomposition.
+        <constraint_decomposition>  ::= “{“ “name” “:” <string_name> “,”
+                                    “constraint_problem” “:” <string_name> “,”
+                                    “vertices” “:” <vertices> “,”
+                                    “edges” “:” <edges> "}"
+        <vertices> ::= "[" <vertex> ("," <vertex>)* "]"
+        <edges> ::= "[" <edge> ("," <edge>)* "]"
+ */
 class Decomposition(
     dictDecomposition: SerializedDecomposition,
     val vcsp: VCSP
@@ -9,40 +39,27 @@ class Decomposition(
     val name: String = dictDecomposition.name
     val vertices: MutableList<DecompositionVertex> = mutableListOf()
     val edges: MutableList<DecompositionEdge> = mutableListOf()
-
     private val vertexDict: MutableMap<String, DecompositionVertex> = mutableMapOf()
 
     init {
-        /*
-                # library is of type clb.ConstraintLibrary
-
-                # Creates a decomposition object corresponding to json description json_decomposition.
-                #    <constraint_decomposition> ::= “{“ “name” “:” <string_name> “,”
-                #                               “constraint_problem” “:” <string_name> “,”
-                #                               “vertices” “:” <vertices> “,”
-                #                               “edges” “:” <edges> "}"
-                #    <vertices> ::= "[" <vertex> ("," <vertex>)* "]"
-                #    <edges> ::= "[" <edge> ("," <edge>)* "]"
-         */
-        // Check and create vertices
+        /* Check and create vertices */
         val dictVertices = dictDecomposition.vertices
-        for (dictVertex1 in dictVertices) {
-            val vertex1 = DecompositionVertex(dictVertex1, this)
-            if (getVertexByName(vertex1.name) != null) {
-                println("Duplicate vertex named ${vertex1.name} in decomposition $name. Fix and reload.")
-            }
-            vertexDict[vertex1.name] = vertex1
-            vertices.add(vertex1)
+        for (dictVertex in dictVertices) {
+            val vertex = DecompositionVertex(dictVertex, this)
+            if (getVertexByName(vertex.name) != null)
+                throw DuplicateVertexException(vertex, name)
+            vertexDict[vertex.name] = vertex
+            vertices.add(vertex)
         }
 
-        // Check and create edges
+        /* Check and create edges */
         val dictEdges = dictDecomposition.edges
-        for (dictEdge1 in dictEdges) {
-            val edge1 = DecompositionEdge(dictEdge1, this)
-            edges.add(edge1)
+        for (dictEdge in dictEdges) {
+            val edge = DecompositionEdge(dictEdge, this)
+            edges.add(edge)
         }
 
-        // Create the enumeration network
+        /* Create the enumeration network */
         instantiateEnumerationOperators()
     }
 
@@ -100,3 +117,6 @@ class Decomposition(
 
     private fun clearMarks() = vertices.forEach { it.marked = false }
 }
+
+class DuplicateVertexException(vertex: DecompositionVertex, decompositionName: String):
+    Exception("Duplicate vertex named ${vertex.name} in decomposition $decompositionName")

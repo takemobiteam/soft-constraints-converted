@@ -24,7 +24,7 @@ class Project(
         }
 
         // Create the output constraint
-        val constraintDict = ConstraintDictionary(name, this.opVariables, listOf())
+        val constraintDict = ConstraintParameters(name, this.opVariables, listOf())
         outputConstraint = ValuedConstraint(constraintDict, vcspScope, this)
         outputConstraint.producer = this
     }

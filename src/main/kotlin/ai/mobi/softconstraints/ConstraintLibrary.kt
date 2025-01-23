@@ -9,23 +9,21 @@ class ConstraintLibrary {
     private val vcspLibrary = mutableMapOf<String, VCSP>()
     private val decompositionLibrary = mutableMapOf<String, Any>()
 
-    fun readVCSP(): VCSP {
+    fun readVCSP(file: String): VCSP {
         val classLoader = Thread.currentThread().contextClassLoader!!
-        val inputStream = classLoader.getResourceAsStream("examples/full-adder-constraints.json")!!
+        val inputStream = classLoader.getResourceAsStream("examples/$file.json")!!
         val jsonContent =  inputStream.bufferedReader().use(BufferedReader::readText)
         val wrappedDictVCSP = Json.decodeFromString<SerializedValuedConstraintProblem>(jsonContent)
 
         val dictVCSP = wrappedDictVCSP.vscp
         val vcsp = VCSP(dictVCSP)
         vcspLibrary[vcsp.name] = vcsp
-
-        println("Adding valued CSP ${vcsp.name} to library as $vcsp.")
         return vcsp
     }
 
     fun readDecomposition(relativePath: String): Decomposition {
         val classLoader = Thread.currentThread().contextClassLoader!!
-        val inputStream = classLoader.getResourceAsStream("examples/${relativePath}")!!
+        val inputStream = classLoader.getResourceAsStream("examples/$relativePath.json")!!
         val jsonContent =  inputStream.bufferedReader().use(BufferedReader::readText)
         val wrappedDictDecomposition = Json.decodeFromString<SerializedConstraintDecomposition>(jsonContent)
 
@@ -36,7 +34,6 @@ class ConstraintLibrary {
 
         val decomposition = Decomposition(dictDecomposition, vcsp)
         decompositionLibrary[decomposition.name] = decomposition
-        println("Adding valued CSP decomposition ${decomposition.name} to library as $decomposition.")
         return decomposition
     }
 

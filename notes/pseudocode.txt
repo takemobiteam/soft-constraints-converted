@@ -1,0 +1,65 @@
+function BFOB(COP):
+    // Step 1: Compute the Tree Decomposition (T)
+    T ← ComputeTreeDecomposition(COP.constraintGraph)   // Preprocess the COP into a tree decomposition
+
+    // Step 2: Bottom-Up Dynamic Programming on Tree Decomposition
+    for each node v in T in post-order:
+        ProcessNode(v)  // Process each node in post-order traversal
+
+    // Step 3: Best-First Search with On-Demand Bounds
+    priority_queue ← InitializePriorityQueue(root_constraint)
+
+    while not priority_queue.isEmpty():
+        current_solution ← priority_queue.popBest()    // Expand the most promising node
+
+        if isComplete(current_solution):
+            return current_solution                    // Return the first (best) complete solution
+
+        for each neighbor in Expand(current_solution):
+            h_estimate ← EstimateBound(neighbor)      // Estimate using on-demand bounds
+            priority_queue.insert(neighbor, h_estimate)
+
+    return "No solution found"                         // If search finishes without solutions
+
+
+// Helper Functions
+function ProcessNode(v):
+    // Initialize the local constraint with the node's own constraints
+    f_v ← CombineConstraints(λ(v))  // Combine all local constraints in λ(v)
+
+    // Process messages from child nodes
+    for each child c of v:
+        h_c ← ReceiveMessage(c)         // Receive the message sent from child c
+        f_v ← Combine(f_v, h_c)         // Combine the message with local constraints
+
+    // Prepare a message for the parent
+    if v has a parent node p:
+        h_v ← Project(f_v, χ(p))        // Project the combined constraints onto the shared variables
+        SendMessage(h_v, p)             // Send the message to the parent
+    else:
+        root_constraint ← f_v           // If this is the root, store the global constraint
+
+
+function ReceiveMessage(child):
+    // Retrieve the message sent by the child node
+    return child.message                // The message contains the projected constraints
+
+
+function SendMessage(message, parent):
+    // Send the computed message to the parent node
+    parent.receive(message)             // Call the parent's method to process the message
+
+
+function CombineConstraints(constraints):
+    combined ← constraints[0]
+    for c in constraints[1:]:
+        combined ← Combine(combined, c)  // Combine constraints pairwise
+    return combined
+
+function Project(constraint, variables):
+    return Summarize(constraint, variables)           // Summarize by removing irrelevant variables
+
+function InitializePriorityQueue(root_constraint):
+    queue ← new PriorityQueue()
+    queue.insert(root_constraint, EstimateBound(root_constraint))
+    return queue

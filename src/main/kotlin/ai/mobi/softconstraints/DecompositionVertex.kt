@@ -64,7 +64,9 @@ class DecompositionVertex(
         if (!marked) {
             marked = true
 
-            // Instantiate operators for all input vertices first
+            /*
+                Instantiate operators for all input vertices first, and accumulate their associated (output) constraint.
+             */
             val inputConstraints = mutableListOf<ValuedConstraint>()
             for (inputVertex in inputVertices) {
                 inputVertex.instantiateEnumerationOperators()
@@ -74,11 +76,13 @@ class DecompositionVertex(
             operations.clear()
             derivedConstraints.clear()
 
-            // Compose the vertex's constraints with input constraints
+            /* Will compose our constraints with the output constraints of our input */
             val opConstraints = constraints.toMutableList()
             opConstraints.addAll(inputConstraints)
 
             val vcspScope = decomp.vcsp.scope
+
+            /* Compose constraints pairwise */
             var combinedConstraint = opConstraints.removeAt(0)
 
             for (constraint in opConstraints) {
@@ -89,11 +93,11 @@ class DecompositionVertex(
                 derivedConstraints.add(combinedConstraint)
             }
 
-            // Project the composition onto the vertex's variables
+            /* Project the composition onto the vertex's variables */
             val projectOperation = Project(this, combinedConstraint, variables, vcspScope)
             operations.add(projectOperation)
 
-            // Set the projected constraint as the output constraint
+            /* Record the constraint of the projection as the constraint of this vertex */
             val projectedConstraint = projectOperation.outputConstraint
             outputConstraint = projectedConstraint
             derivedConstraints.add(projectedConstraint)

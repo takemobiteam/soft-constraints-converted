@@ -2,7 +2,10 @@ package ai.mobi.softconstraints
 
 import ai.mobi.softconstraints.serde.SerializedConstraint
 
-data class ConstraintDictionary(
+/**
+ * The parameters needed to create a [ValuedConstraint]
+ */
+data class ConstraintParameters(
     val name: String,
     val scope: List<Variable>,
     val relation: List<List<String>>
@@ -14,14 +17,14 @@ data class ConstraintDictionary(
     }
 }
 
-fun SerializedConstraint.toConstraintDictionary(vcspScope: VCSPScope) = ConstraintDictionary(
+fun SerializedConstraint.toConstraintDictionary(vcspScope: VCSPScope) = ConstraintParameters(
     name,
     scope.map { vcspScope.varDict[it]!! },
     relation
 )
 
 class ValuedConstraint(
-    dictValuedConstraint: ConstraintDictionary,
+    constraintParams: ConstraintParameters,
     vcspScope: VCSPScope,
     var producer: Operation? = null
 ) {
@@ -31,10 +34,10 @@ class ValuedConstraint(
     private var index: Int = 0
 
     init {
-        assertVarsInOrder((dictValuedConstraint.scope))
-        name = dictValuedConstraint.name
-        scope = VCScope(dictValuedConstraint.scope, this, vcspScope)
-        relation = VCRelation(dictValuedConstraint.relation, scope)
+        assertVarsInOrder((constraintParams.scope))
+        name = constraintParams.name
+        scope = VCScope(constraintParams.scope, this, vcspScope)
+        relation = VCRelation(constraintParams.relation, scope)
     }
 
     override fun toString(): String {
