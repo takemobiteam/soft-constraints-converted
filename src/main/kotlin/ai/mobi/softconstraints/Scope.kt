@@ -16,11 +16,13 @@ class VCScope(
             // Directly add variable instance
             orderedVars.add(vari)
             val variName = vari.name
-            if (varsDict.containsKey(variName)) throw DuplicateVariableName(variName, vars)
+            if (varsDict.containsKey(variName))
+                throw DuplicateVariableName(variName, vars)
             varsDict[variName] = vari
         }
 
-        // Check variable order consistency (if needed, based on additional functionality)
+        /* Check variable order consistency */
+        assertVarsInOrder(orderedVars)
     }
 
     override fun toString(): String {
@@ -49,3 +51,10 @@ class VCScope(
 
 class DuplicateVariableName(val varName: String, val vars: List<Variable>):
     Exception("Variable $varName is duplicated in constraint scope $vars")
+
+tailrec fun assertVarsInOrder(vs: List<Variable>): Unit {
+    if (vs.size > 1)
+        if (vs[0].position >= vs[1].position)
+            throw Exception("Variables out of order in $vs")
+        else assertVarsInOrder(vs.drop(1))
+}

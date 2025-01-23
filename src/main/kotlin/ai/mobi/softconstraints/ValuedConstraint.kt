@@ -6,7 +6,13 @@ data class ConstraintDictionary(
     val name: String,
     val scope: List<Variable>,
     val relation: List<List<String>>
-)
+) {
+    init {
+        assertVarsInOrder(scope)
+        if (!noDuplicates(scope.map { variable -> variable.name }))
+            throw Exception("Duplicates!!!!")
+    }
+}
 
 fun SerializedConstraint.toConstraintDictionary(vcspScope: VCSPScope) = ConstraintDictionary(
     name,
@@ -19,10 +25,17 @@ class ValuedConstraint(
     vcspScope: VCSPScope,
     var producer: Operation? = null
 ) {
-    val name = dictValuedConstraint.name
-    val scope: VCScope = VCScope(dictValuedConstraint.scope, this, vcspScope)
-    val relation: VCRelation = VCRelation(dictValuedConstraint.relation, scope)
+    val name: String
+    val scope: VCScope
+    val relation: VCRelation
     private var index: Int = 0
+
+    init {
+        assertVarsInOrder((dictValuedConstraint.scope))
+        name = dictValuedConstraint.name
+        scope = VCScope(dictValuedConstraint.scope, this, vcspScope)
+        relation = VCRelation(dictValuedConstraint.relation, scope)
+    }
 
     override fun toString(): String {
         return name

@@ -6,3 +6,5 @@ object Utils {
         return list.joinToString(prefix = "[", postfix = "]", separator = ",") { it.toString() }
     }
 }
+
+fun <T> noDuplicates(xs: Collection<T>) = xs.toList().size == xs.toSet().size

@@ -17,13 +17,14 @@ class Project(
 
     init {
         // Check that opVariables is a subset of the input constraint's scope
+        assertVarsInOrder(this.opVariables)
         val isSubset = opVariables.all { it in opInput.scope.orderedVars }
         if (!isSubset) {
             println("Projecting to ${Utils.listToString(opVariables)}, some of which are not in constraint scope ${Utils.listToString(opInput.scope.orderedVars)}.")
         }
 
         // Create the output constraint
-        val constraintDict = ConstraintDictionary(name, opVariables, listOf())
+        val constraintDict = ConstraintDictionary(name, this.opVariables, listOf())
         outputConstraint = ValuedConstraint(constraintDict, vcspScope, this)
         outputConstraint.producer = this
     }
