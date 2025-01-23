@@ -28,14 +28,11 @@ fun main() {
         # 1) Create the Constraint Library, which is the main interface for solving valued CSPS.
         # It loads VCSPs and their decompositions from an example directory.
      */
-    val library = ConstraintLibrary(
-        constraintDirectory = "path/to/examples/",
-        schemaDirectory = "path/to/json-schemas/"
-    )
+    val library = ConstraintLibrary()
 
     /* 2) Load and display an example VCSP, the full-adder from the Sachenbacher Williams Paper */
     println("Load and display a full-adder VCSP from the Sachenbacher/Williams paper.")
-    val vcsp = library.readVCSP("full-adder-constraints.txt")
+    val vcsp = library.readVCSP()
     println()
     vcsp.display()
 
