@@ -11,11 +11,11 @@ class ConstraintLibrary {
 
     fun readVCSP(): VCSP {
         val classLoader = Thread.currentThread().contextClassLoader!!
-        val inputStream = classLoader.getResourceAsStream("examples/full-adder-constraints.txt")!!
+        val inputStream = classLoader.getResourceAsStream("examples/full-adder-constraints.json")!!
         val jsonContent =  inputStream.bufferedReader().use(BufferedReader::readText)
         val wrappedDictVCSP = Json.decodeFromString<SerializedValuedConstraintProblem>(jsonContent)
 
-        val dictVCSP = wrappedDictVCSP.valued_constraint_problem
+        val dictVCSP = wrappedDictVCSP.vscp
         val vcsp = VCSP(dictVCSP)
         vcspLibrary[vcsp.name] = vcsp
 

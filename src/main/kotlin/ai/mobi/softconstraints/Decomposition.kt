@@ -8,8 +8,9 @@ class Decomposition(
 ) {
     val name: String = dictDecomposition.name
     val vertices: MutableList<DecompositionVertex> = mutableListOf()
-    private val vertexDict: MutableMap<String, DecompositionVertex> = mutableMapOf()
     val edges: MutableList<DecompositionEdge> = mutableListOf()
+
+    private val vertexDict: MutableMap<String, DecompositionVertex> = mutableMapOf()
 
     init {
         /*

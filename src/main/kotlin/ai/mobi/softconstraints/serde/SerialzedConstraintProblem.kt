@@ -1,10 +1,11 @@
 package ai.mobi.softconstraints.serde
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class SerializedValuedConstraintProblem(
-    val valued_constraint_problem: SerializedConstraintProblem
+    @SerialName("valued_constraint_problem") val vscp: SerializedConstraintProblem
 )
 
 @Serializable
