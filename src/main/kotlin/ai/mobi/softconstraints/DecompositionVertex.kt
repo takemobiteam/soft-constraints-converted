@@ -15,8 +15,8 @@ class DecompositionVertex(
     private val decomp: Decomposition
 ) {
     val name: String = dictDecompositionVertex.name
-    val variables: MutableList<Variable> = mutableListOf()
-    val constraints: MutableList<ValuedConstraint> = mutableListOf()
+    val variables: List<Variable>
+    val constraints: List<ValuedConstraint>
     val inputVertices: MutableList<DecompositionVertex> = mutableListOf()
     var outputConstraint: ValuedConstraint? = null
     val operations: MutableList<Operation> = mutableListOf()
@@ -26,26 +26,30 @@ class DecompositionVertex(
         val vcsp = decomp.vcsp
 
         // Resolve variables
+        val variablesTemp = mutableListOf<Variable>()
         val variableNames = dictDecompositionVertex.variables
         for (variableName in variableNames) {
             val variable = vcsp.variableNamed(variableName)
             if (variable == null) {
                 println("Undefined variable $variableName used in vertex $name of decomposition ${decomp.name}. Fix and reload.")
             } else {
-                variables.add(variable)
+                variablesTemp.add(variable)
             }
         }
+        variables = variablesTemp.toList()
 
         // Resolve constraints
+        val consstraintsTemp = mutableListOf<ValuedConstraint>()
         val constraintNames = dictDecompositionVertex.constraints
         for (constraintName in constraintNames) {
             val constraint = vcsp.getConstraintByName(constraintName)
             if (constraint == null) {
                 println("Undefined constraint $constraintName used in vertex $name of decomposition ${decomp.name}. Fix and reload.")
             } else {
-                constraints.add(constraint)
+                consstraintsTemp.add(constraint)
             }
         }
+        constraints = consstraintsTemp.toList()
     }
 
     override fun toString(): String {
