@@ -19,7 +19,7 @@ class DecompositionVertex(
     val constraints: MutableList<ValuedConstraint> = mutableListOf()
     val inputVertices: MutableList<DecompositionVertex> = mutableListOf()
     var outputConstraint: ValuedConstraint? = null
-    val operations: MutableList<Any> = mutableListOf()
+    val operations: MutableList<Operation> = mutableListOf()
     val derivedConstraints: MutableList<ValuedConstraint> = mutableListOf()
 
     init {
