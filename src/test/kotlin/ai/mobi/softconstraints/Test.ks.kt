@@ -23,7 +23,6 @@ class Test {
         val decomp = readDecomposition("full-adder-bucket-tree", vcsp)
         assertEquals("adder_bucket_tree", decomp.name)
         assertEquals(9, decomp.vertices.size)
-        assertEquals(8, decomp.edges.size)
      }
 
     @Test

@@ -38,7 +38,6 @@ class Decomposition(
 ) {
     val name: String = serializedDecomposition.name
     val vertices: MutableList<DecompositionVertex> = mutableListOf()
-    val edges: MutableList<DecompositionEdge> = mutableListOf()
     private val vertexDict: MutableMap<String, DecompositionVertex> = mutableMapOf()
 
     init {
@@ -55,8 +54,7 @@ class Decomposition(
         /* Check and create edges */
         val dictEdges = serializedDecomposition.edges
         for (dictEdge in dictEdges) {
-            val edge = DecompositionEdge(dictEdge, this)
-            edges.add(edge)
+            noteEdge(dictEdge, this)
         }
 
         /* Create the enumeration network */
@@ -79,7 +77,6 @@ class Decomposition(
     fun display() {
         println("$this:")
         println("   Decomposes $vcsp")
-        println("   Edges: ${listToString(edges)}")
         println("   Vertices:")
         for (vertex in vertices) {
             vertex.display()
