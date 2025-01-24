@@ -14,7 +14,6 @@ class DecompositionVertex(
     dictDecompositionVertex: SerializedVertex,
     private val decomp: Decomposition
 ) {
-    var marked: Boolean = false
     val name: String = dictDecompositionVertex.name
     val variables: MutableList<Variable> = mutableListOf()
     val constraints: MutableList<ValuedConstraint> = mutableListOf()
@@ -60,47 +59,43 @@ class DecompositionVertex(
     }
 
     fun instantiateEnumerationOperators() {
-        if (!marked) {
-            marked = true
-
-            /*
-                Instantiate operators for all input vertices first, and accumulate their associated (output) constraint.
-             */
-            val inputConstraints = mutableListOf<ValuedConstraint>()
-            for (inputVertex in inputVertices) {
-                inputVertex.instantiateEnumerationOperators()
-                inputConstraints.add(inputVertex.outputConstraint!!)
-            }
-
-            operations.clear()
-            derivedConstraints.clear()
-
-            /* Will compose our constraints with the output constraints of our input */
-            val opConstraints = constraints.toMutableList()
-            opConstraints.addAll(inputConstraints)
-
-            val vcspScope = decomp.vcsp.scope
-
-            /* Compose constraints pairwise */
-            var combinedConstraint = opConstraints.removeAt(0)
-
-            for (constraint in opConstraints) {
-                val combineOperation = Combine(this, combinedConstraint, constraint, vcspScope)
-                operations.add(combineOperation)
-
-                combinedConstraint = combineOperation.outputConstraint
-                derivedConstraints.add(combinedConstraint)
-            }
-
-            /* Project the composition onto the vertex's variables */
-            val projectOperation = Project(this, combinedConstraint, variables, vcspScope)
-            operations.add(projectOperation)
-
-            /* Record the constraint of the projection as the constraint of this vertex */
-            val projectedConstraint = projectOperation.outputConstraint
-            outputConstraint = projectedConstraint
-            derivedConstraints.add(projectedConstraint)
+        /*
+            Instantiate operators for all input vertices first, and accumulate their associated (output) constraint.
+         */
+        val inputConstraints = mutableListOf<ValuedConstraint>()
+        for (inputVertex in inputVertices) {
+            inputVertex.instantiateEnumerationOperators()
+            inputConstraints.add(inputVertex.outputConstraint!!)
         }
+
+        operations.clear()
+        derivedConstraints.clear()
+
+        /* Will compose our constraints with the output constraints of our input */
+        val opConstraints = constraints.toMutableList()
+        opConstraints.addAll(inputConstraints)
+
+        val vcspScope = decomp.vcsp.scope
+
+        /* Compose constraints pairwise */
+        var combinedConstraint = opConstraints.removeAt(0)
+
+        for (constraint in opConstraints) {
+            val combineOperation = Combine(this, combinedConstraint, constraint, vcspScope)
+            operations.add(combineOperation)
+
+            combinedConstraint = combineOperation.outputConstraint
+            derivedConstraints.add(combinedConstraint)
+        }
+
+        /* Project the composition onto the vertex's variables */
+        val projectOperation = Project(this, combinedConstraint, variables, vcspScope)
+        operations.add(projectOperation)
+
+        /* Record the constraint of the projection as the constraint of this vertex */
+        val projectedConstraint = projectOperation.outputConstraint
+        outputConstraint = projectedConstraint
+        derivedConstraints.add(projectedConstraint)
     }
 
     fun nextBest(): ValuedAssignment? {
@@ -109,15 +104,12 @@ class DecompositionVertex(
     }
 
     fun displayEnumerationOperators() {
-        if (!marked) {
-            marked = true
-            println("Vertex $this:")
-            println("  Inputs: ${listToString(inputVertices)}")
-            println("  Operations: ${listToString(operations)}")
+        println("Vertex $this:")
+        println("  Inputs: ${listToString(inputVertices)}")
+        println("  Operations: ${listToString(operations)}")
 
-            inputVertices.forEach { decompositionVertex ->
-                decompositionVertex.displayEnumerationOperators()
-            }
+        inputVertices.forEach { decompositionVertex ->
+            decompositionVertex.displayEnumerationOperators()
         }
     }
 }

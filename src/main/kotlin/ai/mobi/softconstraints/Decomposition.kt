@@ -87,10 +87,7 @@ class Decomposition(
     }
 
     fun displayEnumerationOperators() {
-        clearMarks()
-        for (vertex in vertices) {
-            vertex.displayEnumerationOperators()
-        }
+        vertexIterator().forEach { it.displayEnumerationOperators() }
     }
 
     fun displayConstraintProducers() {
@@ -109,13 +106,13 @@ class Decomposition(
     }
 
     fun instantiateEnumerationOperators() {
-        clearMarks()
-
-        /* Instantiate enumeration operators for each vertex, in topological order */
-        vertices.forEach { it.instantiateEnumerationOperators() }
+        vertexIterator().forEach { it.instantiateEnumerationOperators() }
     }
 
-    private fun clearMarks() = vertices.forEach { it.marked = false }
+    fun vertexIterator(v: DecompositionVertex = vertices[0]): Sequence<DecompositionVertex> = sequence {
+        for (child in v.inputVertices) yieldAll(vertexIterator(child))
+        yield(v)
+    }
 }
 
 class DuplicateVertexException(vertex: DecompositionVertex, decompositionName: String):
