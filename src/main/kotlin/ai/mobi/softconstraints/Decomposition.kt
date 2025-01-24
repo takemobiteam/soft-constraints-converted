@@ -33,17 +33,17 @@ import ai.mobi.softconstraints.serde.SerializedDecomposition
         <edges> ::= "[" <edge> ("," <edge>)* "]"
  */
 class Decomposition(
-    dictDecomposition: SerializedDecomposition,
+    serializedDecomposition: SerializedDecomposition,
     val vcsp: VCSP
 ) {
-    val name: String = dictDecomposition.name
+    val name: String = serializedDecomposition.name
     val vertices: MutableList<DecompositionVertex> = mutableListOf()
     val edges: MutableList<DecompositionEdge> = mutableListOf()
     private val vertexDict: MutableMap<String, DecompositionVertex> = mutableMapOf()
 
     init {
         /* Check and create vertices */
-        val dictVertices = dictDecomposition.vertices
+        val dictVertices = serializedDecomposition.vertices
         for (dictVertex in dictVertices) {
             val vertex = DecompositionVertex(dictVertex, this)
             if (getVertexByName(vertex.name) != null)
@@ -53,7 +53,7 @@ class Decomposition(
         }
 
         /* Check and create edges */
-        val dictEdges = dictDecomposition.edges
+        val dictEdges = serializedDecomposition.edges
         for (dictEdge in dictEdges) {
             val edge = DecompositionEdge(dictEdge, this)
             edges.add(edge)
