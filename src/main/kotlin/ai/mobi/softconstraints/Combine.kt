@@ -3,8 +3,6 @@ package ai.mobi.softconstraints
 import java.util.PriorityQueue
 
 class Combine(
-    private val vertex: DecompositionVertex,
-
     /* Input and output constraints of operator */
     private val input1Constraint: ValuedConstraint,
     private val input2Constraint: ValuedConstraint,

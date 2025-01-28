@@ -23,6 +23,6 @@ fun readDecomposition(relativePath: String, vcsp: VCSP): Decomposition {
     val serializedWrappedDecomp = Json.decodeFromString<SerializedConstraintDecomposition>(jsonContent)
 
     val dictDecomposition = serializedWrappedDecomp.constraint_decomposition
-    val decomposition = Decomposition(dictDecomposition, vcsp)
+    val decomposition = createDecomposition(dictDecomposition, vcsp)
     return decomposition
 }

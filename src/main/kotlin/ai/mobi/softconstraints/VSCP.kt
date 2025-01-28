@@ -13,7 +13,7 @@ class VCSP(dictVCSP: SerializedConstraintProblem) {
     val name = dictVCSP.name
     val scope: VCSPScope = VCSPScope(dictVCSP.scope)
     val constraints: MutableList<ValuedConstraint> = mutableListOf()
-    private val constraintDict: MutableMap<String, ValuedConstraint> = mutableMapOf()
+    val constraintDict: MutableMap<String, ValuedConstraint> = mutableMapOf()
 
     init {
         val constraintList = dictVCSP.constraints

@@ -10,48 +10,15 @@ import ai.mobi.softconstraints.serde.SerializedVertex
  *
  *     <string_names> ::= "[]" | "[" <string_name> ("," <string_name>)* "]"
  */
-class DecompositionVertex(
-    dictDecompositionVertex: SerializedVertex,
-    private val decomp: Decomposition
+data class DecompositionVertex(
+    val name: String,
+    val variables: List<Variable>,
+    val constraints: List<ValuedConstraint>,
+    val inputVertices: List<DecompositionVertex>,
+    var outputConstraint: ValuedConstraint,
+    val operations: List<Operation>,
+    val derivedConstraints: List<ValuedConstraint>,
 ) {
-    val name: String = dictDecompositionVertex.name
-    val variables: List<Variable>
-    val constraints: List<ValuedConstraint>
-    val inputVertices: MutableList<DecompositionVertex> = mutableListOf()
-    var outputConstraint: ValuedConstraint? = null
-    val operations: MutableList<Operation> = mutableListOf()
-    val derivedConstraints: MutableList<ValuedConstraint> = mutableListOf()
-
-    init {
-        val vcsp = decomp.vcsp
-
-        // Resolve variables
-        val variablesTemp = mutableListOf<Variable>()
-        val variableNames = dictDecompositionVertex.variables
-        for (variableName in variableNames) {
-            val variable = vcsp.variableNamed(variableName)
-            if (variable == null) {
-                println("Undefined variable $variableName used in vertex $name of decomposition ${decomp.name}. Fix and reload.")
-            } else {
-                variablesTemp.add(variable)
-            }
-        }
-        variables = variablesTemp.toList()
-
-        // Resolve constraints
-        val consstraintsTemp = mutableListOf<ValuedConstraint>()
-        val constraintNames = dictDecompositionVertex.constraints
-        for (constraintName in constraintNames) {
-            val constraint = vcsp.getConstraintByName(constraintName)
-            if (constraint == null) {
-                println("Undefined constraint $constraintName used in vertex $name of decomposition ${decomp.name}. Fix and reload.")
-            } else {
-                consstraintsTemp.add(constraint)
-            }
-        }
-        constraints = consstraintsTemp.toList()
-    }
-
     override fun toString(): String {
         return name
     }
@@ -62,45 +29,45 @@ class DecompositionVertex(
         println("    Constraints: ${listToString(constraints)}")
     }
 
-    fun instantiateEnumerationOperators() {
-        /*
-            Instantiate operators for all input vertices first, and accumulate their associated (output) constraint.
-         */
-        val inputConstraints = mutableListOf<ValuedConstraint>()
-        for (inputVertex in inputVertices) {
-            inputVertex.instantiateEnumerationOperators()
-            inputConstraints.add(inputVertex.outputConstraint!!)
-        }
-
-        operations.clear()
-        derivedConstraints.clear()
-
-        /* Will compose our constraints with the output constraints of our input */
-        val opConstraints = constraints.toMutableList()
-        opConstraints.addAll(inputConstraints)
-
-        val vcspScope = decomp.vcsp.scope
-
-        /* Compose constraints pairwise */
-        var combinedConstraint = opConstraints.removeAt(0)
-
-        for (constraint in opConstraints) {
-            val combineOperation = Combine(this, combinedConstraint, constraint, vcspScope)
-            operations.add(combineOperation)
-
-            combinedConstraint = combineOperation.outputConstraint
-            derivedConstraints.add(combinedConstraint)
-        }
-
-        /* Project the composition onto the vertex's variables */
-        val projectOperation = Project(this, combinedConstraint, variables, vcspScope)
-        operations.add(projectOperation)
-
-        /* Record the constraint of the projection as the constraint of this vertex */
-        val projectedConstraint = projectOperation.outputConstraint
-        outputConstraint = projectedConstraint
-        derivedConstraints.add(projectedConstraint)
-    }
+//    fun instantiateEnumerationOperators() {
+//        /*
+//            Instantiate operators for all input vertices first, and accumulate their associated (output) constraint.
+//         */
+//        val inputConstraints = mutableListOf<ValuedConstraint>()
+//        for (inputVertex in inputVertices) {
+//            inputVertex.instantiateEnumerationOperators()
+//            inputConstraints.add(inputVertex.outputConstraint!!)
+//        }
+//
+//        operations.clear()
+//        derivedConstraints.clear()
+//
+//        /* Will compose our constraints with the output constraints of our input */
+//        val opConstraints = constraints.toMutableList()
+//        opConstraints.addAll(inputConstraints)
+//
+//        val vcspScope = decomp.vcsp.scope
+//
+//        /* Compose constraints pairwise */
+//        var combinedConstraint = opConstraints.removeAt(0)
+//
+//        for (constraint in opConstraints) {
+//            val combineOperation = Combine(this, combinedConstraint, constraint, vcspScope)
+//            operations.add(combineOperation)
+//
+//            combinedConstraint = combineOperation.outputConstraint
+//            derivedConstraints.add(combinedConstraint)
+//        }
+//
+//        /* Project the composition onto the vertex's variables */
+//        val projectOperation = Project(this, combinedConstraint, variables, vcspScope)
+//        operations.add(projectOperation)
+//
+//        /* Record the constraint of the projection as the constraint of this vertex */
+//        val projectedConstraint = projectOperation.outputConstraint
+//        outputConstraint = projectedConstraint
+//        derivedConstraints.add(projectedConstraint)
+//    }
 
     fun nextBest(): ValuedAssignment? {
         // Delegate to the output constraint's nextBest method

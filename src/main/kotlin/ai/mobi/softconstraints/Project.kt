@@ -1,7 +1,6 @@
 package ai.mobi.softconstraints
 
 class Project(
-    private val vertex: DecompositionVertex,
     private val opInput: ValuedConstraint,
     opVariables: List<Variable>,
     vcspScope: VCSPScope
