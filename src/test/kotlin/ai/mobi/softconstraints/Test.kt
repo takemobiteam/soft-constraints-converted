@@ -2,6 +2,7 @@ package ai.mobi.softconstraints
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 class Test {
     val vars = listOf("a1", "a2", "e1", "e2", "o1", "u", "v", "w", "y")
@@ -149,7 +150,11 @@ class Test {
     }
 
     private fun assertNextBest(vertex: String, expected: List<List<String>?>, decomp: Decomposition) {
-        expected.forEach { assertEquals(it, decomp.nextBest(vertex)?.assignment) }
+        val bestIter = decomp.bestAssignments(vertex).iterator()
+        expected.forEach {
+            if (it == null) assertFalse(bestIter.hasNext())
+            else assertEquals(it, bestIter.next().assignment)
+        }
     }
 
 }

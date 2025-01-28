@@ -1,24 +1,20 @@
 package ai.mobi.softconstraints
 
-fun printNextBest(decomposition: Decomposition, vertexName: String) {
+fun printNextBest(decomposition: Decomposition, vertexName: String): Iterator<ValuedAssignment> {
     // Print the next best assignment for the output of vertexName in decomposition
-    val assignment = decomposition.nextBest(vertexName)
+    val bestAssignments = decomposition.bestAssignments(vertexName).iterator()
     println()
-    println("$vertexName: next best $assignment")
+    println("$vertexName: next best ${bestAssignments.next()}")
+    return bestAssignments.iterator()
 }
 
-fun printBest(decomposition: Decomposition, vertexName: String) {
+fun printBest(decomposition: Decomposition, vertexName: String, best: Iterator<ValuedAssignment>? = null) {
     // Print all best assignments for the output of vertexName in decomposition
     println()
+    val iterToUse = best ?: decomposition.bestAssignments(vertexName).iterator()
     println("Assignments of $vertexName:")
-    while (true) {
-        val assignment = decomposition.nextBest(vertexName)
-        if (assignment != null) {
-            println(assignment)
-        } else {
-            break
-        }
-    }
+    while (iterToUse.hasNext())
+        println(iterToUse.next())
 }
 
 fun main() {
@@ -65,10 +61,10 @@ fun main() {
         Generate the best assignment for vertex 4
         
     """.trimIndent())
-    printNextBest(decomp, "v4")
+    val iter = printNextBest(decomp, "v4")
 
     println("\nFull assignments for V4 - V1")
-    printBest(decomp, "v4")
+    printBest(decomp, "v4", iter)
     printBest(decomp, "v3")
     printBest(decomp, "v2")
     printBest(decomp, "v1")

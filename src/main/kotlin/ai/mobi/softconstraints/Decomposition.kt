@@ -39,16 +39,14 @@ data class Decomposition(
     val edges: List<DecompositionEdge>,
     val vcsp: VCSP
 ) {
-    fun nextBest(vertexName: String): ValuedAssignment? {
-        // Find the vertex by its name
+    fun bestAssignments(vertexName: String) = sequence {
         val vertex = getVertexByName(vertexName)
-            ?: throw IllegalArgumentException("Vertex with name $vertexName not found in decomposition $name.")
 
-        // Delegate to the vertex's nextBest method
-        return vertex.nextBest()
+        /* Delegate to the vertex's nextBest method */
+        yieldAll(vertex.bestAssignments())
     }
 
-    fun getVertexByName(name: String) = vertexDict[name]
+    fun getVertexByName(name: String) = vertexDict[name]!!
 
     override fun toString() = "d:$name"
 
@@ -80,11 +78,6 @@ data class Decomposition(
             }
         }
     }
-
-//    fun instantiateEnumerationOperators() {
-//        vertexIterator().forEach { it.instantiateEnumerationOperators() }
-//    }
-
 }
 
 class DuplicateVertexException(vertex: DecompositionVertex, decompositionName: String) :
