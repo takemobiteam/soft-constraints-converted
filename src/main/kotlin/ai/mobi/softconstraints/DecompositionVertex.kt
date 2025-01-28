@@ -71,7 +71,7 @@ data class DecompositionVertex(
 
     fun nextBest(): ValuedAssignment? {
         // Delegate to the output constraint's nextBest method
-        return outputConstraint?.nextBest()
+        return outputConstraint.nextBest()
     }
 
     fun displayEnumerationOperators() {

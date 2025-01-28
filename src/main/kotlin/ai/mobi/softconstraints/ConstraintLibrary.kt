@@ -24,5 +24,6 @@ fun readDecomposition(relativePath: String, vcsp: VCSP): Decomposition {
 
     val dictDecomposition = serializedWrappedDecomp.constraint_decomposition
     val decomposition = createDecomposition(dictDecomposition, vcsp)
+    println("Read valued CSP decomposition ${decomposition.name}")
     return decomposition
 }

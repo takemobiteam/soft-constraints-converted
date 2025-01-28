@@ -30,6 +30,7 @@ fun main() {
         It loads VCSPs and their decompositions from an example directory.
         
     """.trimIndent())
+    println(" - JSON problems and decompositions in examples")
 
     println("""
         
