@@ -26,7 +26,7 @@ fun SerializedConstraint.toConstraintDictionary(vcspScope: VCSPScope) = Constrai
 class ValuedConstraint(
     constraintParams: ConstraintParameters,
     vcspScope: VCSPScope,
-    var producer: Operation? = null
+    val producer: Operation? = null
 ) {
     val name: String
     val scope: VCScope

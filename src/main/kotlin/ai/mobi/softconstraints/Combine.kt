@@ -28,8 +28,7 @@ class Combine(
             combinedVariables,
             emptyList(),
         )
-        outputConstraint = ValuedConstraint(constraintDict, vcspScope)
-        outputConstraint.producer = this
+        outputConstraint = ValuedConstraint(constraintDict, vcspScope, this)
 
         /* Search state for enumeration */
         queue.add(Triple(-1, 1, 1))
