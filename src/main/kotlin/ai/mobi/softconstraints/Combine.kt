@@ -51,7 +51,7 @@ class Combine(
                     if (!input1SupersetInput2) {
                         val vasgn1Sibling = input1Constraint.ithBest(i + 1)
                         if (vasgn1Sibling != null) {
-                            val qPriority = -vasgn1Sibling.getValue() * vasgn2.getValue()
+                            val qPriority = -vasgn1Sibling.value * vasgn2.value
                             queue.add(Triple(qPriority.toInt(), i + 1, j))
                         }
                     }
@@ -59,7 +59,7 @@ class Combine(
                     if (i == 0) {
                         val vasgn2Sibling = input2Constraint.ithBest(j + 1)
                         if (vasgn2Sibling != null) {
-                            val qPriority = -vasgn1.getValue() * vasgn2Sibling.getValue()
+                            val qPriority = -vasgn1.value * vasgn2Sibling.value
                             queue.add(Triple(qPriority.toInt(), i, j + 1))
                         }
                     }

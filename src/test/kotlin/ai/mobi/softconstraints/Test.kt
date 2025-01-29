@@ -159,7 +159,7 @@ class Test {
                 val (vars, value) = it
                 val nextBest = bestIter.next()
                 assertEquals(vars, nextBest.assignment)
-                assertEquals(value, nextBest.getValue())
+                assertEquals(value, nextBest.value)
             }
         }
     }

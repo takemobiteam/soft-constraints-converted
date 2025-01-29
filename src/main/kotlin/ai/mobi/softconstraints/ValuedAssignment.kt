@@ -1,31 +1,17 @@
 package ai.mobi.softconstraints
 
-/**
- * Parameters to an assignment.  This includes a list variable assignments, and a value.
- */
-data class AssignmentParameters(val assignments: List<String>, val value: Float) {
+fun assignmentParamsFromStrings(assignmentsAndValue: List<String>) =
+    Pair(assignmentsAndValue.dropLast(1), assignmentsAndValue.last().toFloat())
 
-    /**
-     * Create an assignment from the input format.  This is a list of strings, where the last element in the list is
-     * the value.
-     */
-    constructor(assignmentsAndValue: List<String>):
-            this(assignmentsAndValue.dropLast(1), assignmentsAndValue.last().toFloat())
-}
 
 class ValuedAssignment(
     private val scope: VCScope,
-    dictVAssignment: AssignmentParameters
+    val assignment: List<String>,
+    val value: Float,
 ) {
-    val assignment = dictVAssignment.assignments
-    private val value = dictVAssignment.value
 
     override fun toString(): String {
         return "${listToString(assignment)}:$value"
-    }
-
-    fun getValue(): Float {
-        return value
     }
 
     fun project(outputScope: VCScope): ValuedAssignment {
@@ -49,7 +35,7 @@ class ValuedAssignment(
             outputAssignment.add(inputAssignment[inputIndex])
         }
 
-        return ValuedAssignment(outputScope, AssignmentParameters(outputAssignment, value))
+        return ValuedAssignment(outputScope, outputAssignment, value)
     }
 
     /**
@@ -103,8 +89,8 @@ class ValuedAssignment(
         }
 
         // Compose the value for the combined assignment
-        val composedValue = this.getValue() + vasgn2.getValue()
+        val composedValue = this.value + vasgn2.value
 
-        return ValuedAssignment(outputScope, AssignmentParameters(outputAssignment, composedValue))
+        return ValuedAssignment(outputScope, outputAssignment, composedValue)
     }
 }

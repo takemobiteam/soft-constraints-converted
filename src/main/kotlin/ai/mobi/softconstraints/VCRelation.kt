@@ -14,13 +14,14 @@ class VCRelation(
     init {
         if (dictRelation.isNotEmpty()) {
             for (dictVasn in dictRelation) {
-                val vasn = ValuedAssignment(scope, AssignmentParameters(dictVasn))
+                val (assignment, value) = assignmentParamsFromStrings(dictVasn)
+                val vasn = ValuedAssignment(scope, assignment, value)
                 scope.checkValuedAssignment(vasn)
                 assignments.add(vasn)
             }
 
             // Sort assignments in descending order of value
-            assignments.sortByDescending { it.getValue() }
+            assignments.sortByDescending { it.value }
         }
     }
 
