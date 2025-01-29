@@ -119,7 +119,7 @@ private fun addVertex(
         }
 
         val constraints = vertex.constraints.map { constraints[it]!! }
-        val variables = vertex.variables.map { scope.varDict[it]!! }
+        val variables = vertex.variables.map { scope.varByName(it) }
 
         val inputConstraints = inputs.map { it.outputConstraint }
 

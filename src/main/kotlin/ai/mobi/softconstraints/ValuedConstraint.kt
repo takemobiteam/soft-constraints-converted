@@ -1,6 +1,7 @@
 package ai.mobi.softconstraints
 
 import ai.mobi.softconstraints.serde.SerializedConstraint
+import kotlin.collections.map
 
 /**
  * The parameters needed to create a [ValuedConstraint]
@@ -9,17 +10,11 @@ data class ConstraintParameters(
     val name: String,
     val scope: List<Variable>,
     val relation: List<List<String>>
-) {
-    init {
-        assertVarsInOrder(scope)
-        if (!noDuplicates(scope.map { variable -> variable.name }))
-            throw Exception("Duplicates!!!!")
-    }
-}
+)
 
 fun SerializedConstraint.toConstraintDictionary(vcspScope: VCSPScope) = ConstraintParameters(
     name,
-    scope.map { vcspScope.varDict[it]!! },
+    scope.map { vcspScope.varByName(it) },
     relation
 )
 
@@ -34,7 +29,9 @@ class ValuedConstraint(
     private var index: Int = 0
 
     init {
-        assertVarsInOrder((constraintParams.scope))
+        if (!noDuplicates(constraintParams.scope.map { variable -> variable.name }))
+            throw Exception("Duplicates!!!!")
+        assertVarsInOrder(constraintParams.scope, vcspScope)
         name = constraintParams.name
         scope = VCScope(constraintParams.scope, this, vcspScope)
         relation = VCRelation(constraintParams.relation, scope)

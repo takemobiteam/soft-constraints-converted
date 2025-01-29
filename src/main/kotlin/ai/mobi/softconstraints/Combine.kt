@@ -20,7 +20,7 @@ class Combine(
 
     init {
         /* Union of input variables, placed in proper order */
-        val combinedVariables = extractJointVariables(input1Constraint.scope, input2Constraint.scope)
+        val combinedVariables = extractJointVariables(input1Constraint.scope, input2Constraint.scope, vcspScope)
 
         /* Create constraint denoting the result of operator and record operator as its producer */
         val constraintDict = ConstraintParameters(
@@ -86,7 +86,7 @@ class Combine(
          * Return ordered list of combined_variables from scopes 1 and 2.  The result is a list of variables from both,
          * but in the proper order
          */
-        fun extractJointVariables(scope1: VCScope, scope2: VCScope): List<Variable> {
+        fun extractJointVariables(scope1: VCScope, scope2: VCScope, problemScope: VCSPScope): List<Variable> {
             val composedVariables = mutableListOf<Variable>()
             val s1Vars = scope1.orderedVars
             val s2Vars = scope2.orderedVars
@@ -95,8 +95,8 @@ class Combine(
 
             while (s1Index < s1Vars.size || s2Index < s2Vars.size) {
                 if (s1Index < s1Vars.size && s2Index < s2Vars.size) {
-                    val s1IndexPos = s1Vars[s1Index].position
-                    val s2IndexPos = s2Vars[s2Index].position
+                    val s1IndexPos = s1Vars[s1Index].positionIn(problemScope)
+                    val s2IndexPos = s2Vars[s2Index].positionIn(problemScope)
 
                     if (s1IndexPos < s2IndexPos) {
                         /* Add variable from scope1 */

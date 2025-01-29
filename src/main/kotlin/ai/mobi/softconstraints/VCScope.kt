@@ -25,7 +25,7 @@ class VCScope(
         }
 
         /* Check variable order consistency */
-        assertVarsInOrder(orderedVars)
+        assertVarsInOrder(orderedVars, vcspScope)
     }
 
     override fun toString(): String {
@@ -55,9 +55,9 @@ class VCScope(
 class DuplicateVariableName(val varName: String, val vars: List<Variable>):
     Exception("Variable $varName is duplicated in constraint scope $vars")
 
-tailrec fun assertVarsInOrder(vs: List<Variable>) {
+tailrec fun assertVarsInOrder(vs: List<Variable>, problemScope: VCSPScope) {
     if (vs.size > 1)
-        if (vs[0].position >= vs[1].position)
+        if (vs[0].positionIn(problemScope) >= vs[1].positionIn(problemScope))
             throw Exception("Variables out of order in $vs")
-        else assertVarsInOrder(vs.drop(1))
+        else assertVarsInOrder(vs.drop(1), problemScope)
 }

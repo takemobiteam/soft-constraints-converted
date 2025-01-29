@@ -1,6 +1,7 @@
 package ai.mobi.softconstraints
 
 import ai.mobi.softconstraints.serde.SerializedConstraintProblem
+import ai.mobi.softconstraints.serde.SerializedVariable
 
 /**
  *  Creates a VCSP object corresponding to json description json_vcsp.
@@ -11,7 +12,7 @@ import ai.mobi.softconstraints.serde.SerializedConstraintProblem
  */
 class VCSP(dictVCSP: SerializedConstraintProblem) {
     val name = dictVCSP.name
-    val scope: VCSPScope = VCSPScope(dictVCSP.scope)
+    val scope: VCSPScope = dictVCSP.scope.map { Variable(it.name, it.domain) }
     val constraints: MutableList<ValuedConstraint> = mutableListOf()
     val constraintDict: MutableMap<String, ValuedConstraint> = mutableMapOf()
 
@@ -38,7 +39,7 @@ class VCSP(dictVCSP: SerializedConstraintProblem) {
         return constraintDict[name]
     }
 
-    fun variableNamed(variableName: String?) = scope.varDict[variableName]
+    fun variableNamed(variableName: String) = scope.varByName(variableName)
 
     fun display() {
         // Print the VCSP details

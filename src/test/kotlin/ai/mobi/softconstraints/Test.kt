@@ -12,8 +12,7 @@ class Test {
     fun `Read VSCP`() {
         val vscp = readVCSP("full-adder-constraints")
         assertEquals("full_adder", vscp.name)
-        assertEquals(vars, vscp.scope.orderedVars.map { it.name })
-        assertEquals(vars.toSet(), vscp.scope.varDict.keys)
+        assertEquals(vars, vscp.scope.map { it.name })
         assertEquals(constraints, vscp.constraints.map { it.name })
         constraints.forEach { it -> assertEquals(it, vscp.getConstraintByName(it)!!.name) }
     }

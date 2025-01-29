@@ -6,7 +6,7 @@ class Project(
     vcspScope: VCSPScope
 ) : Operation {
     val name: String = "P${count++}"
-    val opVariables: List<Variable> = opVariables.sortedBy { it.position }
+    val opVariables: List<Variable> = opVariables.sortedBy { it.positionIn(vcspScope) }
     val inputConstraint: ValuedConstraint = opInput
     val outputConstraint: ValuedConstraint
 
@@ -16,7 +16,7 @@ class Project(
 
     init {
         // Check that opVariables is a subset of the input constraint's scope
-        assertVarsInOrder(this.opVariables)
+        assertVarsInOrder(this.opVariables, vcspScope)
         val isSubset = opVariables.all { it in opInput.scope.orderedVars }
         if (!isSubset) {
             println("Projecting to ${listToString(opVariables)}, some of which are not in constraint scope ${listToString(opInput.scope.orderedVars)}.")
