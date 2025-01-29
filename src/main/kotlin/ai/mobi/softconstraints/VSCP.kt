@@ -19,7 +19,12 @@ class VCSP(dictVCSP: SerializedConstraintProblem) {
     init {
         val constraintList = dictVCSP.constraints
         for (dictValuedConstraint in constraintList) {
-            val vConstraint = ValuedConstraint(dictValuedConstraint.toConstraintDictionary(scope), scope)
+            val vConstraint = ValuedConstraint(
+                dictValuedConstraint.name,
+                dictValuedConstraint.scope.map { scope.varByName(it) },
+                dictValuedConstraint.relation,
+                null,
+                scope)
             constraints.add(vConstraint)
 
             // Check for duplicate constraint names

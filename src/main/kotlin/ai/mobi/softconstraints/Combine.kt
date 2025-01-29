@@ -23,12 +23,7 @@ class Combine(
         val combinedVariables = extractJointVariables(input1Constraint.scope, input2Constraint.scope, vcspScope)
 
         /* Create constraint denoting the result of operator and record operator as its producer */
-        val constraintDict = ConstraintParameters(
-            name,
-            combinedVariables,
-            emptyList(),
-        )
-        outputConstraint = ValuedConstraint(constraintDict, vcspScope, this)
+        outputConstraint = ValuedConstraint(name, combinedVariables, emptyList(), this, vcspScope)
 
         /* Search state for enumeration */
         queue.add(Triple(-1, 1, 1))

@@ -23,8 +23,7 @@ class Project(
         }
 
         // Create the output constraint
-        val constraintDict = ConstraintParameters(name, this.opVariables, listOf())
-        outputConstraint = ValuedConstraint(constraintDict, vcspScope, this)
+        outputConstraint = ValuedConstraint(name, this.opVariables, listOf(), this, vcspScope)
     }
 
     override fun toString(): String {
