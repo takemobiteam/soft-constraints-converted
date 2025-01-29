@@ -105,14 +105,14 @@ class Test {
         val decomp = readDecomposition("full-adder-bucket-tree", vcsp)
         assertNextBest("v4",
             listOf(
-                listOf("1", "0", "0"),
-                listOf("0", "0", "1"),
-                listOf("0", "1", "1"),
+                Pair(listOf("1", "0", "0"), 1.94f),
+                Pair(listOf("0", "0", "1"), .96f),
+                Pair(listOf("0", "1", "1"), .96f),
                 null),
             decomp)
         assertNextBest("v3",
             listOf(
-                listOf("0", "0", "0"),
+                Pair(listOf("0", "0", "0"), 1.91f),
                 null),
             decomp)
         assertNextBest("v2",
@@ -131,17 +131,17 @@ class Test {
         val decomp = readDecomposition("full-adder-tree-decomposition", vcsp)
         assertNextBest("v3",
             listOf(
-                listOf("G", "0"),
-                listOf("B", "0"),
-                listOf("B", "1"),
+                Pair(listOf("G", "0"), .95f),
+                Pair(listOf("B", "0"), .05f),
+                Pair(listOf("B", "1"), .05f),
                 null),
             decomp)
         assertNextBest("v2",
             listOf(
-                listOf("B", "0", "0", "0", "1"),
-                listOf("B", "0", "0", "1", "1"),
-                listOf("B", "0", "1", "0", "1"),
-                listOf("B", "0", "1", "1", "1"),
+                Pair(listOf("B", "0", "0", "0", "1"), 1.0f),
+                Pair(listOf("B", "0", "0", "1", "1"), 1.0f),
+                Pair(listOf("B", "0", "1", "0", "1"), 1.0f),
+                Pair(listOf("B", "0", "1", "1", "1"), 1.0f),
                 null),
             decomp)
         assertNextBest("v2",
@@ -149,11 +149,19 @@ class Test {
             decomp)
     }
 
-    private fun assertNextBest(vertex: String, expected: List<List<String>?>, decomp: Decomposition) {
+    private fun assertNextBest(
+        vertex: String,
+        expected: List<Pair<List<String>, Float>?>,
+        decomp: Decomposition) {
         val bestIter = decomp.bestAssignments(vertex).iterator()
         expected.forEach {
             if (it == null) assertFalse(bestIter.hasNext())
-            else assertEquals(it, bestIter.next().assignment)
+            else {
+                val (vars, value) = it
+                val nextBest = bestIter.next()
+                assertEquals(vars, nextBest.assignment)
+                assertEquals(value, nextBest.getValue())
+            }
         }
     }
 
