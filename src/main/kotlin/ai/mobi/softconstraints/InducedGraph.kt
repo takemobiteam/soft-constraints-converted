@@ -15,6 +15,18 @@ fun inducedGraph(vars: List<Variable>, constraints: Collection<ValuedConstraint>
     vars.reversed().forEach { variable ->
         val lowerNeighbors = graph.lowerNeighbors(variable, vars)
         inducedGraph.addClique(lowerNeighbors)
+        val edgesWithVar = inducedGraph.edges.filter { (f, t) -> f == variable || t == variable }
+        val relevantConnections = mutableSetOf<Variable>()
+        edgesWithVar.forEach { (f, t) ->
+            if (f != variable) {
+                relevantConnections.add(f)
+            }
+            if (t != variable) {
+                relevantConnections.add(t)
+            }
+        }
+        inducedGraph.addClique(relevantConnections)
+        //inducedGraph.removeNode(variable)
     }
     return inducedGraph
 }

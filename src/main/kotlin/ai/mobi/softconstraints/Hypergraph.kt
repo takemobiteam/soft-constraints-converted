@@ -17,13 +17,14 @@ class Hypergraph<V, E> {
         /* Not very elegant */
 
         /* The elements after the vertex */
-        val elementsAfter = ordering.elementsBefore(v)
+        //val elementsBefore = ordering.elementsBefore(v)
 
         /* Go through each hyperedge containing our vertex & pull out any lower neighbors from that hyperedge */
         val results = mutableSetOf<V>()
         hyperedgesContaining(v).forEach { (_, vs) ->
             /* vs is a hyperedge containing the target vertex. */
-            results.addAll(elementsAfter.intersect(vs))
+            val elementsBefore = ordering.elementsBefore(v)  // This should be correctly implemented
+            results.addAll(elementsBefore.intersect(vs))
         }
         return results
     }
@@ -31,12 +32,13 @@ class Hypergraph<V, E> {
 
 class Graph<V> {
     private val vertices = mutableSetOf<V>()
-    private val edges = mutableSetOf<Pair<V, V>>()
+    val edges = mutableSetOf<Pair<V, V>>()
+
+    fun edgesContaining(v: V) = edges.filter { (x, y) -> x == v || y == v }
 
     fun addNode(node: V) = vertices.add(node)
     fun addEdge(fromV: V, toV: V) {
-        if (edges.contains(Pair(toV, fromV))) throw IllegalArgumentException()
-        else
+        if (!edges.contains(Pair(toV, fromV)) && !edges.contains(Pair(fromV, toV)))
             edges.add(Pair(fromV, toV))
     }
 
@@ -47,6 +49,11 @@ class Graph<V> {
                 addEdge(list[i], list[j])
             }
         }
+    }
+
+    fun removeNode(node: V) {
+        vertices.remove(node)
+        edges.removeIf { (f, t) -> f == node || t == node }
     }
 
     fun edgeCount() = edges.size
