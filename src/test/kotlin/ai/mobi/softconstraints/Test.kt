@@ -1,5 +1,7 @@
 package ai.mobi.softconstraints
 
+import ai.mobi.softconstraints.serde.readDecomposition
+import ai.mobi.softconstraints.serde.readVCSP
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

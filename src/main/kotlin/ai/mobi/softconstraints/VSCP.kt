@@ -10,28 +10,20 @@ import ai.mobi.softconstraints.serde.SerializedVariable
  *                    “constraints” “:” <constraints> "}"
  *     <constraints> ::= “{“ <constraint> ("," <constraint>)*  “}”
  */
-class VCSP(dictVCSP: SerializedConstraintProblem) {
-    val name = dictVCSP.name
-    val scope: VCSPScope = dictVCSP.scope.map { Variable(it.name, it.domain) }
-    val constraints: MutableList<ValuedConstraint> = mutableListOf()
+class VCSP(
+    val name: String,
+    val scope: VCSPScope,
+    val constraints: List<ValuedConstraint>,
+) {
     val constraintDict: MutableMap<String, ValuedConstraint> = mutableMapOf()
 
     init {
-        val constraintList = dictVCSP.constraints
-        for (dictValuedConstraint in constraintList) {
-            val vConstraint = ValuedConstraint(
-                dictValuedConstraint.name,
-                dictValuedConstraint.scope.map { scope.varByName(it) },
-                dictValuedConstraint.relation,
-                null,
-                scope)
-            constraints.add(vConstraint)
-
-            // Check for duplicate constraint names
-            if (constraintDict.containsKey(vConstraint.name)) {
-                println("Duplicate constraint named ${vConstraint.name} in VCSP $name - $dictValuedConstraint. Fix and reload.")
+        // Check for duplicate constraint names
+        for (constraint in constraints) {
+            if (constraintDict.containsKey(constraint.name)) {
+                println("Duplicate constraint named ${constraint.name} in VCSP $name - $constraint. Fix and reload.")
             } else {
-                constraintDict[vConstraint.name] = vConstraint
+                constraintDict[constraint.name] = constraint
             }
         }
     }

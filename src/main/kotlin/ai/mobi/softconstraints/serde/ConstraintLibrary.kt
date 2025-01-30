@@ -1,7 +1,8 @@
-package ai.mobi.softconstraints
+package ai.mobi.softconstraints.serde
 
-import ai.mobi.softconstraints.serde.SerializedConstraintDecomposition
-import ai.mobi.softconstraints.serde.SerializedValuedConstraintProblem
+import ai.mobi.softconstraints.Decomposition
+import ai.mobi.softconstraints.VCSP
+import ai.mobi.softconstraints.createDecomposition
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 
@@ -12,7 +13,7 @@ fun readVCSP(file: String): VCSP {
     val serializedWrappedVCSP = Json.decodeFromString<SerializedValuedConstraintProblem>(jsonContent)
 
     val dictVCSP = serializedWrappedVCSP.vscp
-    val vcsp = VCSP(dictVCSP)
+    val vcsp = dictVCSP.deserialize()
     return vcsp
 }
 

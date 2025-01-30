@@ -1,5 +1,8 @@
 package ai.mobi.softconstraints
 
+import ai.mobi.softconstraints.serde.readDecomposition
+import ai.mobi.softconstraints.serde.readVCSP
+
 fun printNextBest(decomposition: Decomposition, vertexName: String): Iterator<ValuedAssignment> {
     // Print the next best assignment for the output of vertexName in decomposition
     val bestAssignments = decomposition.bestAssignments(vertexName).iterator()
