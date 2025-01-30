@@ -6,7 +6,7 @@ fun assignmentParamsFromStrings(assignmentsAndValue: List<String>) =
 
 class ValuedAssignment(
     private val scope: VCScope,
-    val assignment: List<String>,
+    val assignment: List<VariableValue>,
     val value: Float,
 ) {
 

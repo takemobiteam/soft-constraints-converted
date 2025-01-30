@@ -49,3 +49,77 @@ class VCSP(
         }
     }
 }
+
+fun vcsp(name: String) = VCSPBuilder(name)
+
+class VCSPBuilder(val name: String) {
+    val vars = mutableListOf<String>()
+    val vals = mutableListOf<VariableBuilder>()
+    val constraintNames = mutableListOf<String>()
+    val constraintBuilders = mutableListOf<ConstraintBuilder>()
+
+    fun variable(varName: VariableName) = VariableBuilder(this).also {
+        vars.add(varName)
+        vals.add(it)
+    }
+
+    fun constraint(constraintName: String) = ConstraintBuilder(this).also {
+        constraintNames.add(constraintName)
+        constraintBuilders.add(it)
+    }
+
+    fun build(): VCSP {
+        val problemScope = vars.zip(vals).map { (varName, varBuilder) ->
+            Variable(varName, varBuilder.vals!!)
+        }
+
+        return VCSP(
+            name,
+            problemScope,
+            constraintNames.zip(constraintBuilders).map { (constraintName, constraintBuilder) ->
+                ValuedConstraint(
+                    constraintName,
+                    constraintBuilder.scopeVars!!.map { problemScope.varByName(it) },
+                    constraintBuilder.assignments.zip(constraintBuilder.values).map { (assignments, value) ->
+                        assignments + listOf(value.toString())
+                    },
+                    null,
+                    problemScope
+                )
+            }
+        )
+    }
+}
+
+class ConstraintBuilder(val vcspBuilder: VCSPBuilder)  {
+    var scopeVars: List<String>? = null
+    var assignments: MutableList<List<VariableValue>> = mutableListOf()
+    var values: MutableList<Float> = mutableListOf()
+
+    fun scope(vararg vars: String): ConstraintBuilder{
+        scopeVars = vars.toList()
+        return this
+    }
+
+    fun assignment(vararg vals: VariableValue): ConstraintBuilder {
+        assignments.add(vals.toList())
+        return this
+    }
+
+    fun value(value: Float): ConstraintBuilder {
+        values.add(value)
+        return this
+    }
+
+    fun constraint(name: String) = vcspBuilder.constraint(name)
+
+    fun build() = vcspBuilder.build()
+}
+
+class VariableBuilder(val vcspBuilder: VCSPBuilder) {
+    var vals: List<String>? = null
+    fun domain(vararg vals: String): VCSPBuilder {
+        this.vals = vals.toList()
+        return vcspBuilder
+    }
+}

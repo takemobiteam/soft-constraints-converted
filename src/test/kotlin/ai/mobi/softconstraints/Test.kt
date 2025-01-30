@@ -12,7 +12,7 @@ class Test {
 
     @Test
     fun `Read VSCP`() {
-        val vscp = readVCSP("full-adder-constraints")
+        val vscp = fullAdderConstraintsProblem
         assertEquals("full_adder", vscp.name)
         assertEquals(vars, vscp.scope.map { it.name })
         assertEquals(constraints, vscp.constraints.map { it.name })
@@ -21,7 +21,7 @@ class Test {
 
     @Test
     fun `Read decomposition`() {
-        val vcsp = readVCSP("full-adder-constraints")
+        val vcsp = fullAdderConstraintsProblem
         val decomp = readDecomposition("full-adder-bucket-tree", vcsp)
         assertEquals("adder_bucket_tree", decomp.name)
         assertEquals(9, decomp.vertexDict.size)
@@ -102,7 +102,7 @@ class Test {
 
     @Test
     fun `Next best bucket tree`() {
-        val vcsp = readVCSP("full-adder-constraints")
+        val vcsp = fullAdderConstraintsProblem
         val decomp = readDecomposition("full-adder-bucket-tree", vcsp)
         assertNextBest("v4",
             listOf(
@@ -128,7 +128,7 @@ class Test {
 
     @Test
     fun `Next best decomposition`() {
-        val vcsp = readVCSP("full-adder-constraints")
+        val vcsp = fullAdderConstraintsProblem
         val decomp = readDecomposition("full-adder-tree-decomposition", vcsp)
         assertNextBest("v3",
             listOf(
