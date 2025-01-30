@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
 class Test {
-    val vars = listOf("a1", "a2", "e1", "e2", "o1", "u", "v", "w", "y")
+    val vars = listOf("u", "v", "w", "y", "a1", "a2", "e1", "e2", "o1")
     val constraints = listOf("fa1", "fa2", "fe1", "fe2", "fo1")
 
     @Test
@@ -132,17 +132,17 @@ class Test {
         val decomp = readDecomposition("full-adder-tree-decomposition", vcsp)
         assertNextBest("v3",
             listOf(
-                Pair(listOf("G", "0"), .95f),
-                Pair(listOf("B", "0"), .05f),
-                Pair(listOf("B", "1"), .05f),
+                Pair(listOf("0", "G"), .95f),
+                Pair(listOf("0", "B"), .05f),
+                Pair(listOf("1", "B"), .05f),
                 null),
             decomp)
         assertNextBest("v2",
             listOf(
-                Pair(listOf("B", "0", "0", "0", "1"), 1.0f),
-                Pair(listOf("B", "0", "0", "1", "1"), 1.0f),
-                Pair(listOf("B", "0", "1", "0", "1"), 1.0f),
-                Pair(listOf("B", "0", "1", "1", "1"), 1.0f),
+                Pair(listOf("0", "0", "0", "1", "B"), 1.0f),
+                Pair(listOf("0", "0", "1", "1", "B"), 1.0f),
+                Pair(listOf("0", "1", "0", "1", "B"), 1.0f),
+                Pair(listOf("0", "1", "1", "1", "B"), 1.0f),
                 null),
             decomp)
         assertNextBest("v2",
