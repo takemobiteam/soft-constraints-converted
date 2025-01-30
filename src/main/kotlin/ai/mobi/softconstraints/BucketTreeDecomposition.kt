@@ -19,10 +19,11 @@ fun constructBucketTree(
 }
 
 fun <V> chi(node: V, inducedGraph: Graph<V>, ordering: List<V>): Set<V> =
-    (0 until ordering.indexOf(node))
-        .filter { inducedGraph.hasEdge(ordering[it], node) }
-        .map { ordering[it] }
-        .toSet()
+    setOf(node) +
+            (0 until ordering.indexOf(node))
+                .filter { inducedGraph.hasEdge(ordering[it], node) }
+                .map { ordering[it] }
+                .toSet()
 
 fun lambda(node: Variable, constraints: Set<ValuedConstraint>) =
-    constraints.filter { it.scope.orderedVars.last() == node }.toSet()
+    constraints.filter { it.scope.orderedVars.first() == node }.toSet()

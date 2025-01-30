@@ -106,12 +106,19 @@ class TestInducedGraph {
 
         assertEquals(setOf(x1), chis[x1])
         assertEquals(setOf(x1, x2), chis[x2])
-        assertEquals(setOf(x3, x3), chis[x3])
+        assertEquals(setOf(x2, x3), chis[x3])
         assertEquals(setOf(x3, x4), chis[x4])
 
         assertEquals(setOf(f1), lambdas[x1])
         assertEquals(setOf(f2), lambdas[x2])
         assertEquals(setOf(f3), lambdas[x3])
         assertEquals(emptySet(), lambdas[x4])
+    }
+
+    @Test
+    fun testBucketTreeDecompositionProblemFromPaper() {
+        val inducedGraph = inducedGraph(fullAdderConstraintsProblem.scope, fullAdderConstraintsProblem.constraints)
+        val bucketTree = constructBucketTree(inducedGraph, fullAdderConstraintsProblem.scope, fullAdderConstraintsProblem.constraints.toSet())
+        assertEquals(setOf("v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9"), inducedGraph.nodes().map { it.name }.toSet())
     }
 }
