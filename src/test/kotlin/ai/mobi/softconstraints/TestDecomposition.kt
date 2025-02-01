@@ -1,12 +1,11 @@
 package ai.mobi.softconstraints
 
 import ai.mobi.softconstraints.serde.readDecomposition
-import ai.mobi.softconstraints.serde.readVCSP
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
-class Test {
+class TestDecomposition {
     val vars = listOf("u", "v", "w", "y", "a1", "a2", "e1", "e2", "o1")
     val constraints = listOf("fa1", "fa2", "fe1", "fe2", "fo1")
 
