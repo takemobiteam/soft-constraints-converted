@@ -12,7 +12,10 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
-    implementation("com.google.guava:guava:32.1.3-jre")     // Used for graph library
+
+    /* Logging */
+    implementation("io.github.microutils:kotlin-logging:3.0.5")
+    implementation("ch.qos.logback:logback-classic:1.4.11") // SLF4J backend
 
     testImplementation(kotlin("test"))
 }
