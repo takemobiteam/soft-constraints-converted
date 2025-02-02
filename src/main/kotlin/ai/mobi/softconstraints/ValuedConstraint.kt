@@ -1,6 +1,5 @@
 package ai.mobi.softconstraints
 
-import ai.mobi.softconstraints.serde.SerializedConstraint
 import kotlin.collections.map
 
 class ValuedConstraint(

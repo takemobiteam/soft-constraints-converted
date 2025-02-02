@@ -1,7 +1,5 @@
 package ai.mobi.softconstraints
 
-import ai.mobi.softconstraints.serde.SerializedVertex
-
 /**
  *  Creates a decomposition vertex object corresponding to json description dict_decomposition_vertex.
  *     <vertex> ::= "{" “name” : <string_name> “,”

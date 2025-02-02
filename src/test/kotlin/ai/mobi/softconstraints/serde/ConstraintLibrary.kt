@@ -2,7 +2,6 @@ package ai.mobi.softconstraints.serde
 
 import ai.mobi.softconstraints.Decomposition
 import ai.mobi.softconstraints.VCSP
-import ai.mobi.softconstraints.createDecomposition
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 

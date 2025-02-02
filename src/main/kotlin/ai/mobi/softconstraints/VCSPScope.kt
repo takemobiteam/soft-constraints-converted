@@ -1,7 +1,5 @@
 package ai.mobi.softconstraints
 
-import ai.mobi.softconstraints.serde.SerializedVariable
-
 /**
  * A list of [Variable]s, sorted by their specified order
  *

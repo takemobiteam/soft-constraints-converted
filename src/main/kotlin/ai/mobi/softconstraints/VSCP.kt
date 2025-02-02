@@ -1,8 +1,5 @@
 package ai.mobi.softconstraints
 
-import ai.mobi.softconstraints.serde.SerializedConstraintProblem
-import ai.mobi.softconstraints.serde.SerializedVariable
-
 /**
  *  Creates a VCSP object corresponding to json description json_vcsp.
  *     <VCSP> ::= “{“ “name” “:” <string_name> “,”
