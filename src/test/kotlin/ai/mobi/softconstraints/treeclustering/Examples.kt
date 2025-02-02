@@ -2,8 +2,6 @@
 
 package ai.mobi.softconstraints.treeclustering
 
-import ai.mobi.softconstraints.display
-
 
 fun main() {
     test1()
@@ -22,11 +20,11 @@ private fun test1() {
     g1.display()
 
     val igo1 = listOf(0, 1, 2)
-    val (ig1, igw1) = inducedGraph(g1, igo1)
+    val (ig1, _) = inducedGraph(g1, igo1)
     ig1.display()
 
     val igo2 = listOf(0, 2, 1)
-    val (ig2, igw2) = inducedGraph(g1, igo2)
+    val (ig2, _) = inducedGraph(g1, igo2)
     ig2.display()
 }
 
@@ -57,7 +55,7 @@ private fun test2() {
     ig2.display()
 
     val igo3 = listOf(5, 3, 2, 1, 0, 4)
-    val (ig3, igw3) = inducedGraph(g1, igo3)
+    val (ig3, _) = inducedGraph(g1, igo3)
     ig3.display()
 }
 
@@ -96,7 +94,7 @@ private fun test3() {
     println("\nMany solutions.  Check that each vertex maximizes number of preceding neighbors.")
 
     println("\nInduced graph of max cardinality ordering $mco1")
-    val (ig1, igw) = inducedGraph(g1, mco1)
+    val (ig1, _) = inducedGraph(g1, mco1)
     ig1.display()
 
     /*
